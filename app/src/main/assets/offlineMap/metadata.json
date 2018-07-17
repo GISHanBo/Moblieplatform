@@ -1,0 +1,13 @@
+{
+  "name": "chinaTMS",
+  "version": "1.1.0",
+  "description": "",
+  "attribution": "Rendered with <a href=\"https://www.maptiler.com/\">MapTiler</a>",
+  "type": "overlay",
+  "format": "png",
+  "minzoom": "2",
+  "maxzoom": "6",
+  "scale": "1.000000",
+  "bounds": [73.21289062, 13.96958721, 139.84290485, 52.82226562],
+  "profile": "mercator"
+}
