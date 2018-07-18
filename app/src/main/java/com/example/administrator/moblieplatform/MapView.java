@@ -344,6 +344,9 @@ public class MapView extends WebView {
      * @param points 海量带图标点
      */
     public void addMultiPoint(List<Point> points) {
+        if(!tempDB.getState()){
+            openMultiPointMode();
+        }
         for (Point point : points) {
             tempDB.addPoint(point);
         }

@@ -14,6 +14,7 @@ public class TempDB {
     private SQLiteDatabase sqLiteDatabase;
     private static String[] columns=new String[]{"lng","lat","serial","icon"};
     private static String[] heatColumns=new String[]{"lng","lat","value"};
+    private boolean state=false;
     public TempDB(Context context) {
         String dirPath=context.getFilesDir().getPath()+"/"+ context.getPackageName()+ "/databases";
         File dir = new File(dirPath);
@@ -24,6 +25,7 @@ public class TempDB {
         sqLiteDatabase.execSQL("CREATE INDEX if not exists idx_test_lat_lng ON point (lat, lng);");
         sqLiteDatabase.execSQL("create table if not exists heat(id integer primary key, lat double,lng double,value float);");
         sqLiteDatabase.execSQL("CREATE INDEX if not exists idx_heat_lat_lng ON heat (lat, lng);");
+        state=true;
 
     }
     public List<Point> queryPoint(double latMin,double lngMin,double latMax,double lngMax){
@@ -76,19 +78,25 @@ public class TempDB {
         sqLiteDatabase.execSQL("REINDEX idx_heat_lat_lng ;");
     }
     public void close(){
-        sqLiteDatabase.execSQL("delete from point");
-        sqLiteDatabase.close();
+        if(state){
+            sqLiteDatabase.execSQL("delete from point");
+            sqLiteDatabase.close();
+            state=false;
+        }
     }
     public void closeHeatMap(){
-        sqLiteDatabase.execSQL("delete from heat");
-        sqLiteDatabase.close();
+        if(state){
+            sqLiteDatabase.execSQL("delete from heat");
+            sqLiteDatabase.close();
+            state=false;
+        }
     }
 
-    public void clearTempPoint(){
-        sqLiteDatabase.execSQL("delete from point");
+    /**
+     * 数据库是否关闭
+     * @return true为未关闭
+     */
+    public boolean getState() {
+        return state;
     }
-    public void clearTempHeat(){
-        sqLiteDatabase.execSQL("delete from heat");
-    }
-
 }

@@ -75,6 +75,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mapView.closeMultiPointMode();
+                final double lat=21.156638593954;
+                final double lng=110.366251766682;
+//                mapView.openMultiPointMode();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        List<Point> list=new ArrayList<>();
+                        for (int i=0;i<800;i++){
+                            list.add(new Point(lat+0.000001*i,lng+0.000001*i,"test.png",i));
+                            Log.e(TAG, "run: "+i );
+                        }
+                        mapView.addMultiPoint(list);
+                    }
+                }).start();
 //                mapView.clearHighlight();
 //                mapView.removeHeatMap();//移除热力图
 //                mapView.removeTms();
