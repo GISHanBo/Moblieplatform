@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
             final double lng=110.366251766682;
             mapView.setZoom(14);
             mapView.setCenter(lat,lng);
-
+            mapView.addHighlight(lat,lng,0);
 //            mapView.setZoomLimit(1,5);
 
 

@@ -50,7 +50,7 @@ function setZoom(level) {
  */
 function addHighlight(lat, lng,rotate) {
 	var myIcon = L.divIcon({
-		html: "<img src='lib/leaflet/images/locate.svg' style='transform: rotate("+rotate+"deg);' />",
+		html: "<img src='lib/leaflet/images/locate.png' style='transform: rotate("+rotate+"deg);' />",
 		className: 'my-locate-icon'
 	});
 

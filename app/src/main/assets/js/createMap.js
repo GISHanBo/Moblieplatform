@@ -2,8 +2,8 @@ var map = L.map('map', {
 	attributionControl: false,
 	zoomControl: false,
 	measureControl: true,
-	center: [0, 0],
-	zoom: 1,
+//	center: [0, 0],
+//	zoom: 1,
 	maxZoom: 30,
 	minZoom: 1
 });
@@ -11,6 +11,10 @@ var map = L.map('map', {
 var multiPointMode=false;
 var heatMapMode=false;
 var heatMap=null;
+map.on("load",function(e){
+window.Android.onMapLoad();
+})
+map.setView([0,0],1);
 
 map.on("zoomend", function(e) {
 	window.Android.onZoomChange(e.target.getZoom());

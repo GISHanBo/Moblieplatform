@@ -20,8 +20,8 @@ public class MapView extends WebView {
     /**
      * 地图是否已经加载，true为加载
      */
-    public boolean hasInit = false;
-    private static String TAG = "MapView";
+
+    private static String TAG = "地图";
     private MapListener mapListener;
     private TempDB tempDB;
 
@@ -444,9 +444,8 @@ public class MapView extends WebView {
     class MWebView extends WebViewClient {
         @Override
         public void onPageFinished(WebView view, String url) {
-            hasInit = true;
             super.onPageFinished(view, url);
-            mapListener.onMapLoaded();
+            //mapListener.onMapLoaded();
         }
     }
 
@@ -463,6 +462,14 @@ public class MapView extends WebView {
             mapListener.onIconClick(lat, lng, Integer.valueOf(id));
         }
 
+        /**
+         * 地图初始化完成
+         */
+        @JavascriptInterface
+        public void onMapLoad(){
+            mapListener.onMapLoaded();
+            Log.d(TAG,"加载完成");
+        }
         /**
          * 地图缩放等级改变事件
          *
