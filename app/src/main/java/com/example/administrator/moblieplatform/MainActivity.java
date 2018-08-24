@@ -5,8 +5,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.Button;
+
+import com.Map.MapListener;
+import com.Map.MapView;
+import com.Map.Point;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -99,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    class mMapListener implements MapListener{
+    class mMapListener implements MapListener {
         /**
          * 地图加载完成执行操作
          */

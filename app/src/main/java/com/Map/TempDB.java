@@ -1,9 +1,8 @@
-package com.example.administrator.moblieplatform;
+package com.Map;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Environment;
 
 import java.io.File;
 import java.util.ArrayList;

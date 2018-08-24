@@ -1,4 +1,4 @@
-package com.example.administrator.moblieplatform;
+package com.Map;
 
 /**
  * 带图标点类型实体类

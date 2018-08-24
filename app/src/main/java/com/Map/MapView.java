@@ -1,4 +1,4 @@
-package com.example.administrator.moblieplatform;
+package com.Map;
 
 import android.content.Context;
 import android.os.Build;

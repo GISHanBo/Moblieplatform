@@ -7,11 +7,11 @@
     tools:context=".MainActivity">
 
 
- <com.example.administrator.moblieplatform.MapView
+ <com.Map.MapView
      android:id="@+id/mapView"
      android:layout_width="match_parent"
      android:layout_height="match_parent">
- </com.example.administrator.moblieplatform.MapView>
+ </com.Map.MapView>
 
  <Button
      android:id="@+id/button"

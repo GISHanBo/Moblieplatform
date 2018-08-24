@@ -1,4 +1,4 @@
-package com.example.administrator.moblieplatform;
+package com.Map;
 
 /**
  * 热力图数据实体类

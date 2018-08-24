@@ -1,4 +1,4 @@
-package com.example.administrator.moblieplatform;
+package com.Map;
 
 /**
  * 地图监听接口
