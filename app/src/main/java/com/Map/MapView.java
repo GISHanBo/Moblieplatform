@@ -24,6 +24,8 @@ public class MapView extends WebView {
     private static String TAG = "地图";
     private MapListener mapListener;
     private TempDB tempDB;
+    private SpatialDatabaseHelper spatialDatabaseHelper;
+
 
     /**
      * MapView使用方法
@@ -378,6 +380,7 @@ public class MapView extends WebView {
      */
     public void addHeatData(List<HeatPoint> heatPoints){
         tempDB = new TempDB(getContext());
+
         for (HeatPoint point : heatPoints) {
             tempDB.addHeatPoint(point);
         }
@@ -445,7 +448,8 @@ public class MapView extends WebView {
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
-            //mapListener.onMapLoaded();
+            //页面加载完成后实例化数据库管理类
+            spatialDatabaseHelper=SpatialDatabaseHelper.getInstance(getContext());
         }
     }
 
