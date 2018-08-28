@@ -56,9 +56,10 @@ function addHighlight(lat, lng,rotate) {
 
 	L.marker([lat, lng], {
 		icon: myIcon,
-		iconSize: [22, 22],
-		iconAnchor:[11,11],
-		attribution: "高亮显示"
+		iconSize: [80, 80],
+		iconAnchor:[40,40],
+		attribution: "高亮显示",
+		zIndexOffset:1000,
 	}).addTo(map);
 }
 /**
@@ -196,7 +197,13 @@ function switchBaseLayer(source, type) {
 					minZoom: 1,
 					attribution: "mssBaseLayer"
 				}).addTo(map);
-			} else {
+			} else if(type=="卫星图无注记"){
+			L.tileLayer.chinaProvider('GaoDe.Satellite.Map', {
+            					maxZoom: 22,
+            					minZoom: 1,
+            					attribution: "mssBaseLayer"
+            				}).addTo(map);
+			} else{
 				L.tileLayer.chinaProvider('GaoDe.Normal.Map', {
 					maxZoom: 22,
 					minZoom: 1,
@@ -216,7 +223,13 @@ function switchBaseLayer(source, type) {
 					minZoom: 1,
 					attribution: "mssBaseLayer"
 				}).addTo(map);
-			} else {
+			} else if(type=="卫星图无注记"){
+				L.tileLayer.chinaProvider('TianDiTu.Satellite.Map', {
+            					maxZoom: 22,
+            					minZoom: 1,
+            					attribution: "mssBaseLayer"
+            				}).addTo(map);
+			} else{
 				L.tileLayer.chinaProvider('TianDiTu.Normal.Map', {
 					maxZoom: 22,
 					minZoom: 1,

@@ -115,7 +115,8 @@ public class MainActivity extends AppCompatActivity {
             mapView.addHighlight(lat,lng,0);
 //            mapView.setZoomLimit(1,5);
 
-
+            mapView.switchBaseLayer("高德","卫星图无注记");
+            mapView.switchBaseLayer("天地图","卫星图无注记");
 
 
         }
