@@ -13,7 +13,7 @@ public class TempDB {
     private SQLiteDatabase sqLiteDatabase;
     private static String[] columns=new String[]{"lng","lat","serial","icon"};
     private static String[] heatColumns=new String[]{"lng","lat","value"};
-    private boolean state=false;
+    private boolean state;
     public TempDB(Context context) {
         String dirPath=context.getFilesDir().getPath()+"/"+ context.getPackageName()+ "/databases";
         File dir = new File(dirPath);
