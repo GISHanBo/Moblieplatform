@@ -1,4 +1,4 @@
-package com.Map;
+package com.mobile.map;
 
 /**
  * 热力图数据实体类

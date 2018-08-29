@@ -1,4 +1,4 @@
-package com.Map;
+package com.mobile.map;
 
 import android.content.Context;
 import android.os.Build;
@@ -11,8 +11,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.Map.entity.Heat;
-import com.Map.entity.Point;
+import com.mobile.map.entity.Heat;
+import com.mobile.map.entity.Point;
 
 import java.util.List;
 
@@ -20,9 +20,6 @@ import java.util.List;
  * 地图类
  */
 public class MapView extends WebView {
-    /**
-     * 地图是否已经加载，true为加载
-     */
 
     private static String TAG = "地图";
     private MapListener mapListener;

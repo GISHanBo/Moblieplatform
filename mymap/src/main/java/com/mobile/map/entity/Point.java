@@ -1,4 +1,4 @@
-package com.Map.entity;
+package com.mobile.map.entity;
 
 /**
  * 带图标点类型实体类

@@ -1,4 +1,4 @@
-package com.Map;
+package com.mobile.map;
 
 /**
  * 地图监听接口

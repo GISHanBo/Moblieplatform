@@ -1,10 +1,10 @@
-package com.Map;
+package com.mobile.map;
 
 import android.content.Context;
 import android.util.Log;
 
-import com.Map.entity.Heat;
-import com.Map.entity.Point;
+import com.mobile.map.entity.Heat;
+import com.mobile.map.entity.Point;
 
 import java.io.File;
 import java.io.FileNotFoundException;
