@@ -3,7 +3,7 @@ package com.Map.entity;
 /**
  * 线路实体类
  */
-public class line {
+public class Line {
     private int id;//全局唯一ID
     private String name;//线路名称
     private String type;//线路类型

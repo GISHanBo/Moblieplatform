@@ -3,7 +3,7 @@ package com.Map.entity;
 /**
  * 带图标点类型实体类
  */
-public class Marker {
+public class Point {
     private double lat;
     private double lng;
     private String icon;
@@ -14,7 +14,7 @@ public class Marker {
      * @param lat 纬度
      * @param lng 经度
      */
-    public Marker(double lat, double lng) {
+    public Point(double lat, double lng) {
         this.lat = lat;
         this.lng = lng;
     }
@@ -26,7 +26,7 @@ public class Marker {
      * @param icon 图标名称
      * @param serial 编号
      */
-    public Marker(double lat, double lng, String icon, Integer serial) {
+    public Point(double lat, double lng, String icon, Integer serial) {
         this.lat = lat;
         this.lng = lng;
         this.icon = icon;

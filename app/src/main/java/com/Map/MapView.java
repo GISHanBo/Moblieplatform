@@ -11,6 +11,9 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.Map.entity.Heat;
+import com.Map.entity.Point;
+
 import java.util.List;
 
 /**
@@ -23,7 +26,6 @@ public class MapView extends WebView {
 
     private static String TAG = "地图";
     private MapListener mapListener;
-    private TempDB tempDB;
     private SpatialDatabaseHelper spatialDatabaseHelper;
 
 
@@ -324,20 +326,12 @@ public class MapView extends WebView {
     }
 
     /**
-     * 开启撒点模式
-     */
-    public void openMultiPointMode() {
-        tempDB = new TempDB(getContext());
-        loadMethod("setMultiPointMode(" + true + ")");
-    }
-
-    /**
      * 关闭撒点模式
      */
     public void closeMultiPointMode() {
-        tempDB.close();
-        loadMethod("removeIcons()");
         loadMethod("setMultiPointMode(" + false + ")");
+        spatialDatabaseHelper.clearMarkerData();
+        loadMethod("removeIcons()");
     }
 
     /**
@@ -346,13 +340,8 @@ public class MapView extends WebView {
      * @param points 海量带图标点
      */
     public void addMultiPoint(List<Point> points) {
-        if(!tempDB.getState()){
-            openMultiPointMode();
-        }
-        for (Point point : points) {
-            tempDB.addPoint(point);
-        }
-        tempDB.reIndex();
+        loadMethod("setMultiPointMode(" + true + ")");
+        spatialDatabaseHelper.addMarker(points);
         loadMethod("getBounds()");
     }
 
@@ -378,26 +367,21 @@ public class MapView extends WebView {
      * 添加热力图数据
      * @param heatPoints 热力图数据
      */
-    public void addHeatData(List<HeatPoint> heatPoints){
-        tempDB = new TempDB(getContext());
-
-        for (HeatPoint point : heatPoints) {
-            tempDB.addHeatPoint(point);
-        }
-        tempDB.reIndexHeat();
+    public void addHeatData(List<Heat> heatPoints){
+        spatialDatabaseHelper.addHeat(heatPoints);
         loadMethod("addHeatMap()");
     }
+
     /**
      * 移除热力图
      */
     public void removeHeatMap() {
-        tempDB.closeHeatMap();
+        spatialDatabaseHelper.clearHeatData();
         loadMethod("removeHeatMap()");
     }
 
     private void showPointsIn(double latMin, double lngMin, double latMax, double lngMax) {
-        removeIcons();
-        List<Point> points = tempDB.queryPoint(latMin, lngMin, latMax, lngMax);
+        List<Point> points = spatialDatabaseHelper.queryPoint(latMin, lngMin, latMax, lngMax);
         int size = points.size();
         int step = 1;
         if (size > 100) {
@@ -409,10 +393,11 @@ public class MapView extends WebView {
             addIcon(point.getLat(), point.getLng(), point.getIcon(), point.getSerial());
             i = i + step;
         }
-
     }
+
     private void showHeatIn(double latMin, double lngMin, double latMax, double lngMax) {
-        List<HeatPoint> points = tempDB.queryHeatPoint(latMin, lngMin, latMax, lngMax);
+
+     List<Heat> points = spatialDatabaseHelper.queryHeatPoint(latMin,lngMin,latMax,lngMax);
         int size = points.size();
         int step = 1;
         if (size > 100) {
@@ -423,13 +408,12 @@ public class MapView extends WebView {
         StringBuilder str= new StringBuilder("[");
 
         for (int i = 0; i < size; ) {
-            HeatPoint point = points.get(i);
+            Heat point = points.get(i);
             str.append("{'lat': ").append(point.getLat()).append(",'lon': ").append(point.getLng()).append(",'value': ").append(point.getValue()).append("},");
             i = i + step;
         }
         str = new StringBuilder(str.substring(0, str.length()-1));
         str.append("]");
-        Log.e(TAG, String.valueOf(str));
         addHeatData(str.toString());
     }
 

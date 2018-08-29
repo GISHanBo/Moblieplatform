@@ -4,13 +4,16 @@ import android.content.Context;
 import android.util.Log;
 
 import com.Map.entity.Heat;
-import com.Map.entity.Marker;
+import com.Map.entity.Point;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+
+import java.util.List;
 
 import jsqlite.Constants;
 import jsqlite.Database;
@@ -23,37 +26,19 @@ public class SpatialDatabaseHelper {
     private Database database;
 
 
+
     private static class ClassHolder {
         private static final SpatialDatabaseHelper INSTANCE = new SpatialDatabaseHelper();
     }
 
     private SpatialDatabaseHelper() {
-        database=openDatabase(path);
-        //创建空间索引
-        createIndex(database,"line");
-        createIndex(database,"device");
-        createIndex(database,"marker");
-        createIndex(database,"heat");
-        closeDatabase();
-    }
-
-    /**
-     * 向marker表中插入数据
-     *
-     * @param marker 图标和坐标信息
-     */
-    public void addMarker(Marker marker) {
-        doSQL(database, "insert into marker (serial, icon, geom)values('" + marker.getSerial() + "', '" + marker.getIcon() + "', MakePoint(" + marker.getLat() + " ," + marker.getLng() + ", 4326))");
-    }
-
-    /**
-     * 向heat表中插入热力数据
-     *
-     * @param database 空间上数据库
-     * @param heat     热力点信息
-     */
-    public void addHeat(Database database, Heat heat) {
-        doSQL(database, "insert into heat (value, geom)values('" + heat.getValue() + "', MakePoint(" + heat.getLat() + " ," + heat.getLng() + ", 4326))");
+//        Database database=openDatabase();
+//        //创建空间索引
+//        createIndex(database,"Line");
+//        createIndex(database,"Device");
+//        createIndex(database,"marker");
+//        createIndex(database,"heat");
+//        closeDatabase(database);
     }
 
     public static final SpatialDatabaseHelper getInstance(Context context) {
@@ -61,17 +46,117 @@ public class SpatialDatabaseHelper {
         if (path == null) {
             path = createDB(context);
         }
-        Log.e(TAG, 2 + path);
         return ClassHolder.INSTANCE;
     }
 
     /**
+     * 向marker表中插入数据
+     * @param points 带图标点数据
+     */
+    public void addMarker(List<Point> points) {
+        database=openDatabase();
+        for (Point point:points){
+            doSQL(database, "insert into marker (serial, icon, geom)values('" + point.getSerial() + "', '" + point.getIcon() + "', MakePoint(" + point.getLat() + " ," + point.getLng() + ", 4326))");
+        }
+        createIndex(database,"marker");
+    }
+
+    /**
+     * 热力图数据库插入数据
+     * @param list 热力数据
+     */
+    public void addHeat(List<Heat> list) {
+        database=openDatabase();
+        for(Heat heat:list){
+            doSQL(database, "insert into heat (value, geom)values('" + heat.getValue() + "', MakePoint(" + heat.getLat() + " ," + heat.getLng() + ", 4326))");
+        }
+        createIndex(database,"heat");
+    }
+
+    /**
+     * 清除热力图数据
+     */
+    public void clearHeatData() {
+        removeIndex(database,"heat");
+        clearTable(database,"heat");
+        closeDatabase(database);
+    }
+    /**
+     * 清除热力图数据
+     */
+    public void clearMarkerData() {
+        removeIndex(database,"marker");
+        clearTable(database,"marker");
+        closeDatabase(database);
+    }
+
+    /**
+     * 根据范围查询热力图数据
+     * @param latMin 纬度最小值
+     * @param lngMin 经度最小值
+     * @param latMax 纬度最大值
+     * @param lngMax 经度最大值
+     * @return 返回范围内热力图点数据
+     */
+    public List<Heat> queryHeatPoint(double latMin, double lngMin, double latMax, double lngMax){
+        List<Heat> list=new ArrayList<>();
+        String sql="SELECT value, X(geom), Y(geom) FROM heat WHERE ROWID IN" +
+                " (SELECT pkid FROM idx_heat_geom WHERE" +
+                "  xmin > "+latMin+" AND xmax < "+latMax+" AND ymin > "+lngMin+" AND ymax < "+lngMax+");";
+        try {
+            Stmt stmt = database.prepare(sql);
+            while (stmt.step()) {
+                float value = (float) stmt.column_double(0);
+                double lat =  stmt.column_double(1);
+                double lng =  stmt.column_double(2);
+                Heat heat=new Heat(lat,lng,value);
+                list.add(heat);
+            }
+            stmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e(TAG,"查询热力图错误");
+            Log.e(TAG,e.toString());
+        }
+        return list;
+    }
+
+    /**
+     * 根据范围查询点数据
+     * @param latMin 纬度最小值
+     * @param lngMin 经度最小值
+     * @param latMax 纬度最大值
+     * @param lngMax 经度最大值
+     * @return 返回范围内点数据
+     */
+    public List<Point> queryPoint(double latMin, double lngMin, double latMax, double lngMax){
+        List<Point> points=new ArrayList<>();
+        String sql="SELECT serial, icon, X(geom), Y(geom) FROM marker WHERE ROWID IN" +
+                " (SELECT pkid FROM idx_marker_geom WHERE" +
+                "  xmin > "+latMin+" AND xmax < "+latMax+" AND ymin > "+lngMin+" AND ymax < "+lngMax+");";
+        try {
+            Stmt stmt = database.prepare(sql);
+            while (stmt.step()) {
+                Integer serial=stmt.column_int(0);
+                String icon = stmt.column_string(1);
+                double lat =  stmt.column_double(2);
+                double lng =  stmt.column_double(3);
+                Point point=new Point(lat,lng,icon,serial);
+                points.add(point);
+            }
+            stmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e(TAG,"查询海量点数据错误");
+            Log.e(TAG,e.toString());
+        }
+        return points;
+    }
+    /**
      * 打开Spatialite数据库
-     *
-     * @param path 数据库路径和名称
      * @return Spatialite数据库
      */
-    private Database openDatabase(String path) {
+    private Database openDatabase() {
         Database database = new Database();
         File dbFile = new File(path);
         try {
@@ -87,30 +172,6 @@ public class SpatialDatabaseHelper {
     }
 
     /**
-     * 判断数据库中是否已经存在某些表
-     *
-     * @param database  目标数据库
-     * @param tableName 表名
-     * @return 存在返回true, 不存在返回false
-     */
-    private boolean isTableExit(Database database, String tableName) {
-        String query = "select count(*)  from sqlite_master where type='table' and name = '" + tableName + "';";
-        try {
-            Stmt stmt = database.prepare(query);
-            stmt.step();
-            int count = stmt.column_int(0);
-            Log.e(TAG, String.valueOf(count));
-            if (count != 0) {
-                return true;
-            }
-            stmt.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    /**
      * 无需返回值的SQL操作
      *
      * @param database 目标数据库
@@ -123,6 +184,7 @@ public class SpatialDatabaseHelper {
             stmt.close();
         } catch (Exception e) {
             e.printStackTrace();
+            Log.e("数据库执行错误",e.toString());
         }
     }
 
@@ -159,9 +221,10 @@ public class SpatialDatabaseHelper {
      * 关闭数据库
      */
     public void clearDatabase() {
+        Database database=openDatabase();
         try {
-            clearTable(database,"line");
-            clearTable(database,"device");
+            clearTable(database,"Line");
+            clearTable(database,"Device");
             clearTable(database,"heat");
             clearTable(database,"marker");
             database.close();
@@ -170,10 +233,11 @@ public class SpatialDatabaseHelper {
         }
     }
 
+
     /**
      * 关闭数据库
      */
-    public void closeDatabase(){
+    private void closeDatabase(Database database){
         try {
             database.close();
         } catch (Exception e) {
@@ -183,12 +247,11 @@ public class SpatialDatabaseHelper {
     /**
      * 每次自动从Assets复制空间数据库
      *
-     * @param context
+     * @param context 上下文对象
      * @return 生成的数据库路径
      */
-    public static String createDB(Context context) {
+    private static String createDB(Context context) {
         String filePath = context.getFilesDir().getPath() + "/" + context.getPackageName() + "/databases/";
-//        String filePath=Environment.getExternalStorageDirectory()+"/tempDB/";
         String dbName = "db.sqlite";
         File dir = new File(filePath);
         // 如果目录不中存在，创建这个目录

@@ -1,6 +1,5 @@
 package com.example.administrator.moblieplatform;
 
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,9 +8,8 @@ import android.widget.Button;
 
 import com.Map.MapListener;
 import com.Map.MapView;
-import com.Map.Point;
+import com.Map.entity.Point;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String path= "file://"+Environment.getExternalStorageDirectory().getAbsolutePath()+ File.separator+"offlineMap/{z}/{x}/{y}.png";
+//                String path= "file://"+Environment.getExternalStorageDirectory().getAbsolutePath()+ File.separator+"offlineMap/{z}/{x}/{y}.png";
 //                path="file:///storage/emulated/0/offlineMap/{z}/{x}/{y}.png";
                 //                mapView.addTms("osfflineMap/{z}/{x}/{y}.png",6,2);
 //                mapView.addTms(path,6,2);
@@ -44,19 +42,20 @@ public class MainActivity extends AppCompatActivity {
 //                mapView.addCityResult(22,111,"城市2",55);
 //                mapView.addCityResult(20,109,"城市3",100);
 //                mapView.addCityResult(21,109,"城市4555",440);
+                final double lat=21.156638593954;
+                final double lng=110.366251766682;
 //                new Thread(new Runnable() {
 //                    @Override
 //                    public void run() {
-//                        List<HeatPoint> list=new ArrayList<>();
-//                        for (int i=0;i<1;i++){
-//                            list.add(new HeatPoint(lat+0.000001*i,lng+0.000001*i,1));
+//                        List<Heat> list=new ArrayList<>();
+//                        for (int i=0;i<100;i++){
+//                            list.add(new Heat(lat+0.000001*i,lng+0.000001*i,1));
 //                        }
 //                        mapView.addHeatData(list);
 //                    }
 //                }).start();
 //                mapView.addHighlight(45.0,111.0,90f);
-                final double lat=21.156638593954;
-                final double lng=110.366251766682;
+
                 mapView.openMultiPointMode();
                 new Thread(new Runnable() {
                     @Override
@@ -64,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
                         List<Point> list=new ArrayList<>();
                         for (int i=0;i<800;i++){
                             list.add(new Point(lat+0.000001*i,lng+0.000001*i,"test.png",i));
-                            Log.e(TAG, "run: "+i );
                         }
                         mapView.addMultiPoint(list);
                     }
@@ -77,21 +75,22 @@ public class MainActivity extends AppCompatActivity {
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                mapView.removeHeatMap();
                 mapView.closeMultiPointMode();
-                final double lat=21.156638593954;
-                final double lng=110.366251766682;
-//                mapView.openMultiPointMode();
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        List<Point> list=new ArrayList<>();
-                        for (int i=0;i<800;i++){
-                            list.add(new Point(lat+0.000001*i,lng+0.000001*i,"test.png",i));
-                            Log.e(TAG, "run: "+i );
-                        }
-                        mapView.addMultiPoint(list);
-                    }
-                }).start();
+//                final double lat=21.156638593954;
+//                final double lng=110.366251766682;
+////                mapView.openMultiPointMode();
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        List<Point> list=new ArrayList<>();
+//                        for (int i=0;i<800;i++){
+//                            list.add(new Point(lat+0.000001*i,lng+0.000001*i,"test.png",i));
+//                            Log.e(TAG, "run: "+i );
+//                        }
+//                        mapView.addMultiPoint(list);
+//                    }
+//                }).start();
 //                mapView.clearHighlight();
 //                mapView.removeHeatMap();//移除热力图
 //                mapView.removeTms();

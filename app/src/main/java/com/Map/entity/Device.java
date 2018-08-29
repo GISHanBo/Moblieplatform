@@ -3,7 +3,7 @@ package com.Map.entity;
 /**
  * 设备实体类
  */
-public class device {
+public class Device {
     private int id;//全局唯一ID
     private String name;//设备名称
     private String type;//设备类型

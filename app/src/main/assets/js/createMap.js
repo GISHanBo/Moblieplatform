@@ -2,8 +2,6 @@ var map = L.map('map', {
 	attributionControl: false,
 	zoomControl: false,
 	measureControl: true,
-//	center: [0, 0],
-//	zoom: 1,
 	maxZoom: 30,
 	minZoom: 3
 });
@@ -28,6 +26,7 @@ function centerChange(e){
 map.on("moveend",function(e){
 	var bounds=e.target.getBounds();
 	if(multiPointMode){
+	removeIcons();
 	window.Android.onViewChange(bounds._southWest.lat,bounds._southWest.lng,bounds._northEast.lat,bounds._northEast.lng);
 	}
 	if(heatMapMode){
@@ -37,6 +36,7 @@ map.on("moveend",function(e){
 function getBounds(){
 	var bounds=map.getBounds();
 	if(multiPointMode){
+	removeIcons();
 	window.Android.onViewChange(bounds._southWest.lat,bounds._southWest.lng,bounds._northEast.lat,bounds._northEast.lng);
 	}
 	if(heatMapMode){
