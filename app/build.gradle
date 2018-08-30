@@ -28,4 +28,5 @@ dependencies {
     implementation project(':mymap')
     //implementation files('libs/classes.jar')
     //implementation files('libs/spatialite.jar')
+
 }

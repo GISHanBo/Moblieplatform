@@ -6,12 +6,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import com.Map.MapListener;
-import com.Map.MapView;
-import com.Map.entity.Point;
+
+import com.mobile.map.MapListener;
+import com.mobile.map.MapView;
+import com.mobile.map.entity.Heat;
+import com.mobile.map.entity.Point;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity {
     private MapView mapView;
@@ -56,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
 //                }).start();
 //                mapView.addHighlight(45.0,111.0,90f);
 
-                mapView.openMultiPointMode();
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -67,8 +69,7 @@ public class MainActivity extends AppCompatActivity {
                         mapView.addMultiPoint(list);
                     }
                 }).start();
-
-
+//                mapView.setShowLatLng(true);
             }
         });
         Button button2=findViewById(R.id.button2);
@@ -98,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
 //                mapView.closeMultiPointMode();
                 //移除行政区域设备统计结果
 //                mapView.removeCityResult();
+//                 mapView.setShowLatLng(false);
             }
         });
     }
@@ -115,8 +117,6 @@ public class MainActivity extends AppCompatActivity {
 //            mapView.setZoomLimit(1,5);
 
             mapView.switchBaseLayer("高德","卫星图无注记");
-            mapView.switchBaseLayer("天地图","卫星图无注记");
-
 
         }
 

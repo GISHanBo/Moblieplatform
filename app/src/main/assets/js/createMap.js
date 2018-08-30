@@ -6,13 +6,14 @@ var map = L.map('map', {
 	minZoom: 3
 });
 
-var multiPointMode=false;
-var heatMapMode=false;
 var heatMap=null;
 map.on("load",function(e){
 window.Android.onMapLoad();
 })
 map.setView([38, 113],5);
+
+
+var events={};//地图事件集合
 
 map.on("zoomend", function(e) {
 	window.Android.onZoomChange(e.target.getZoom());
@@ -23,23 +24,4 @@ function centerChange(e){
 	var center=e.target.getCenter();
 	window.Android.onCenterChange(center.lat,center.lng);
 };
-map.on("moveend",function(e){
-	var bounds=e.target.getBounds();
-	if(multiPointMode){
-	removeIcons();
-	window.Android.onViewChange(bounds._southWest.lat,bounds._southWest.lng,bounds._northEast.lat,bounds._northEast.lng);
-	}
-	if(heatMapMode){
-	window.Android.onHeatViewChange(bounds._southWest.lat,bounds._southWest.lng,bounds._northEast.lat,bounds._northEast.lng);
-	}
-});
-function getBounds(){
-	var bounds=map.getBounds();
-	if(multiPointMode){
-	removeIcons();
-	window.Android.onViewChange(bounds._southWest.lat,bounds._southWest.lng,bounds._northEast.lat,bounds._northEast.lng);
-	}
-	if(heatMapMode){
-	window.Android.onHeatViewChange(bounds._southWest.lat,bounds._southWest.lng,bounds._northEast.lat,bounds._northEast.lng);
-	}
-}
+

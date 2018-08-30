@@ -328,7 +328,6 @@ public class MapView extends WebView {
     public void closeMultiPointMode() {
         loadMethod("setMultiPointMode(" + false + ")");
         spatialDatabaseHelper.clearMarkerData();
-        loadMethod("removeIcons()");
     }
 
     /**
@@ -337,9 +336,8 @@ public class MapView extends WebView {
      * @param points 海量带图标点
      */
     public void addMultiPoint(List<Point> points) {
-        loadMethod("setMultiPointMode(" + true + ")");
         spatialDatabaseHelper.addMarker(points);
-        loadMethod("getBounds()");
+        loadMethod("setMultiPointMode(" + true + ")");
     }
 
     /**
