@@ -1,3 +1,61 @@
 <resources>
     <string name="app_name">Moblie platform</string>
+    <string name="ten">十字</string>
+    <string name="pole">电杆</string>
+    <string name="well">电缆井</string>
+    <string name="switchgear">开关柜</string>
+    <string name="branch">电缆分支箱</string>
+    <string name="distribution">配电箱</string>
+    <string name="dialog_cancel">取消</string>
+    <array name="type_pole">
+        <item>直线杆</item>
+        <item>直线转角杆</item>
+        <item>45°转角杆</item>
+        <item>90°转角杆</item>
+        <item>无拉线转角杆</item>
+        <item>T接杆</item>
+        <item>终端杆</item>
+        <item>跨越杆</item>
+        <item>钢管杆</item>
+    </array>
+    <array name="well">
+        <item>直线井</item>
+        <item>转角井</item>
+        <item>三通井</item>
+        <item>四通井</item>
+        <item>直线长井</item>
+        <item>手孔井</item>
+        <item>八角形四通井</item>
+    </array>
+    <array name="switchgear">
+        <item>熔断器式开关</item>
+        <item>隔离开关</item>
+    </array>
+    <array name="distribution">
+        <item>落地式</item>
+        <item>挂墙式</item>
+    </array>
+    <array name="line_type">
+        <item>0.4KV线路</item>
+        <item>0.22KV线路</item>
+    </array>
+    <array name="level_power">
+        <item>380V</item>
+        <item>220V</item>
+    </array>
+    <array name="line_class">
+        <item>绝缘铝导线</item>
+        <item>绝缘铜导线</item>
+        <item>钢芯铝绞线</item>
+    </array>
+    <array name="type_pole_height">
+        <item>8m</item>
+        <item>10m</item>
+        <item>12m</item>
+        <item>15m</item>
+    </array>
+    <array name="type_pole_material">
+        <item>水泥杆</item>
+        <item>钢管杆</item>
+    </array>
 </resources>
