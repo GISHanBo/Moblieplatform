@@ -7,27 +7,83 @@
     tools:context=".MainActivity">
 
 
- <com.mobile.map.MapView
-     android:id="@+id/mapView"
-     android:layout_width="match_parent"
-     android:layout_height="match_parent">
- </com.mobile.map.MapView>
+    <com.mobile.map.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
- <Button
-     android:id="@+id/button"
-     android:layout_width="wrap_content"
-     android:layout_height="wrap_content"
-     android:layout_weight="1"
-     android:text="放大"
-     tools:layout_editor_absoluteX="0dp"
-     tools:layout_editor_absoluteY="0dp" />
+    </com.mobile.map.MapView>
 
- <Button
-     android:id="@+id/button2"
-     android:layout_width="wrap_content"
-     android:layout_height="wrap_content"
-     android:layout_alignParentTop="true"
-     android:layout_marginLeft="120dp"
-     android:layout_weight="1"
-     android:text="缩小" />
+    <!--<Button-->
+    <!--android:id="@+id/button"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_weight="1"-->
+    <!--android:text="放大"-->
+    <!--tools:layout_editor_absoluteX="0dp"-->
+    <!--tools:layout_editor_absoluteY="0dp" />-->
+
+    <!--<Button-->
+    <!--android:id="@+id/button2"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentTop="true"-->
+    <!--android:layout_marginLeft="120dp"-->
+    <!--android:layout_weight="1"-->
+    <!--android:text="缩小" />-->
+    <ImageView
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_centerInParent="true"
+        android:contentDescription="@string/ten"
+        android:src="@drawable/ten" />
+
+    <LinearLayout
+        android:layout_width="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:orientation="vertical"
+        android:paddingEnd="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingStart="5dp">
+
+        <ImageView
+            android:layout_marginTop="5dp"
+            android:layout_width="@dimen/size_icon"
+            android:layout_height="@dimen/size_icon"
+            android:contentDescription="@string/pole"
+            android:src="@drawable/pole"
+            android:onClick="selectPole"/>
+
+        <ImageView
+            android:layout_marginTop="5dp"
+            android:layout_width="@dimen/size_icon"
+            android:layout_height="@dimen/size_icon"
+            android:contentDescription="@string/well"
+            android:src="@drawable/well" />
+
+        <ImageView
+            android:layout_marginTop="5dp"
+            android:layout_width="@dimen/size_icon"
+            android:layout_height="@dimen/size_icon"
+            android:contentDescription="@string/switchgear"
+            android:src="@drawable/switchgear" />
+
+        <ImageView
+            android:layout_marginTop="5dp"
+            android:layout_width="@dimen/size_icon"
+            android:layout_height="@dimen/size_icon"
+            android:contentDescription="@string/branch"
+            android:src="@drawable/box_branch" />
+
+        <ImageView
+            android:layout_marginTop="5dp"
+            android:layout_width="@dimen/size_icon"
+            android:layout_height="@dimen/size_icon"
+            android:contentDescription="@string/distribution"
+            android:src="@drawable/box_distribution" />
+    </LinearLayout>
 </RelativeLayout>

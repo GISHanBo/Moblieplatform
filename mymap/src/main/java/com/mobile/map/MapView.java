@@ -24,6 +24,7 @@ public class MapView extends WebView {
     private static String TAG = "地图";
     private MapListener mapListener;
     private SpatialDatabaseHelper spatialDatabaseHelper;
+    private CustomMultiPointL customMultiPointL;
 
 
     /**
@@ -210,6 +211,25 @@ public class MapView extends WebView {
     }
 
     /**
+     * 添加带图标点
+     * @param list
+     */
+    public void addIcon(List<Point> list){
+        int size = list.size();
+        int step = 1;
+        if (size > 100) {
+            double result = ((double) size) / 100;
+            step = (int) Math.ceil(result);
+        }
+        for (int i = 0; i < size; ) {
+            Point point = list.get(i);
+            addIcon(point.getLat(), point.getLng(), point.getIcon(), point.getSerial());
+            i = i + step;
+        }
+    }
+
+
+    /**
      * 移除全部带图标点
      */
     public void removeIcons() {
@@ -375,6 +395,20 @@ public class MapView extends WebView {
         loadMethod("removeHeatMap()");
     }
 
+    /**
+     * 添加自定义的撒点监听,根据地图范围添加数据
+     * @param customMultiPointL 地图变化范围监听
+     */
+    public void addCustomML(CustomMultiPointL customMultiPointL){
+        this.customMultiPointL=customMultiPointL;
+        loadMethod("setCustomMultiPM(" + true + ")");
+    }
+
+    public void removeCustomML(){
+        loadMethod("setCustomMultiPM(" + false + ")");
+        customMultiPointL=null;
+    }
+
     private void showPointsIn(double latMin, double lngMin, double latMax, double lngMax) {
         List<Point> points = spatialDatabaseHelper.queryPoint(latMin, lngMin, latMax, lngMax);
         int size = points.size();
@@ -483,6 +517,13 @@ public class MapView extends WebView {
         @JavascriptInterface
         public void onHeatViewChange(double latMin, double lngMin, double latMax, double lngMax){
             showHeatIn(latMin, lngMin, latMax, lngMax);
+        }
+
+        @JavascriptInterface
+        public void onCustomChange(double latMin, double lngMin, double latMax, double lngMax) {
+            if(customMultiPointL!=null){
+                customMultiPointL.onBoundsChange(MapView.this,latMin, lngMin, latMax, lngMax);
+            }
         }
     }
 

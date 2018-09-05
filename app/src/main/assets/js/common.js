@@ -37,7 +37,6 @@ var drawOptions={
 	},
 	devices:[],//设备
 	lines:[],//线
-	map:null,
     markerMove:null,//鼠标进入设备点事件
     markerOut:null,//鼠标移出设备点事件
     target:null,//捕捉到的最近点

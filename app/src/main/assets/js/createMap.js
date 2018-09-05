@@ -17,11 +17,11 @@ var events={};//地图事件集合
 
 map.on("zoomend", function(e) {
 	window.Android.onZoomChange(e.target.getZoom());
-})
+});
 map.on("moveend",centerChange);
 map.on("zoomend",centerChange);
 function centerChange(e){
 	var center=e.target.getCenter();
 	window.Android.onCenterChange(center.lat,center.lng);
-};
+}
 

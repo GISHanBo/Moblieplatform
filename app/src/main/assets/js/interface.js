@@ -369,7 +369,28 @@ function setMultiPointMode(bool) {
         delete events.multiPointChange;
     }
 }
-
+/**
+ * 开始自定义海量点模式
+ * @param {Boolean} bool
+ */
+function setCustomMultiPM(bool) {
+    if (bool) {
+        events.customPointChange = function (e) {
+            removeIcons();
+            var bounds=e.target.getBounds();
+            window.Android.onCustomChange(bounds._southWest.lat,bounds._southWest.lng,bounds._northEast.lat,bounds._northEast.lng);
+        };
+        map.on("moveend",events.customPointChange);
+        //初始化显示
+        var bounds=map.getBounds();
+        removeIcons();
+        window.Android.onCustomChange(bounds._southWest.lat,bounds._southWest.lng,bounds._northEast.lat,bounds._northEast.lng);
+    } else {
+        map.off("moveend",events.customPointChange);
+        removeIcons();
+        delete events.customPointChange;
+    }
+}
 /**
  * 添加城市统计结果
  * @param {Number} lat

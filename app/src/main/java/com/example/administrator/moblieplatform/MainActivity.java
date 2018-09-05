@@ -1,5 +1,7 @@
 package com.example.administrator.moblieplatform;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -7,9 +9,9 @@ import android.view.View;
 import android.widget.Button;
 
 
+import com.mobile.map.CustomMultiPointL;
 import com.mobile.map.MapListener;
 import com.mobile.map.MapView;
-import com.mobile.map.entity.Heat;
 import com.mobile.map.entity.Point;
 
 import java.util.ArrayList;
@@ -28,80 +30,97 @@ public class MainActivity extends AppCompatActivity {
         //打开地图首页
         mapView.setListener(new mMapListener());//设置地图监听
 
-        Button button=findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                String path= "file://"+Environment.getExternalStorageDirectory().getAbsolutePath()+ File.separator+"offlineMap/{z}/{x}/{y}.png";
-//                path="file:///storage/emulated/0/offlineMap/{z}/{x}/{y}.png";
-                //                mapView.addTms("osfflineMap/{z}/{x}/{y}.png",6,2);
-//                mapView.addTms(path,6,2);
-//                final double lat=21.156638593954;
-//                final double lng=110.366251766682;
-//                mapView.openMultiPointMode();
-
-                //添加行政区域设备统计结果
-//                mapView.addCityResult(21,110,"城市1",22);
-//                mapView.addCityResult(22,111,"城市2",55);
-//                mapView.addCityResult(20,109,"城市3",100);
-//                mapView.addCityResult(21,109,"城市4555",440);
-                final double lat=21.156638593954;
-                final double lng=110.366251766682;
-//                new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        List<Heat> list=new ArrayList<>();
-//                        for (int i=0;i<100;i++){
-//                            list.add(new Heat(lat+0.000001*i,lng+0.000001*i,1));
-//                        }
-//                        mapView.addHeatData(list);
-//                    }
-//                }).start();
-//                mapView.addHighlight(45.0,111.0,90f);
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        List<Point> list=new ArrayList<>();
-                        for (int i=0;i<800;i++){
-                            list.add(new Point(lat+0.000001*i,lng+0.000001*i,"test.png",i));
-                        }
-                        mapView.addMultiPoint(list);
-                    }
-                }).start();
-//                mapView.setShowLatLng(true);
-            }
-        });
-        Button button2=findViewById(R.id.button2);
-        button2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                mapView.removeHeatMap();
-                mapView.closeMultiPointMode();
-//                final double lat=21.156638593954;
-//                final double lng=110.366251766682;
+//        Button button=findViewById(R.id.button);
+//        button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+////                String path= "file://"+Environment.getExternalStorageDirectory().getAbsolutePath()+ File.separator+"offlineMap/{z}/{x}/{y}.png";
+////                path="file:///storage/emulated/0/offlineMap/{z}/{x}/{y}.png";
+//                //                mapView.addTms("osfflineMap/{z}/{x}/{y}.png",6,2);
+////                mapView.addTms(path,6,2);
+////                final double lat=21.156638593954;
+////                final double lng=110.366251766682;
 ////                mapView.openMultiPointMode();
-//                new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        List<Point> list=new ArrayList<>();
-//                        for (int i=0;i<800;i++){
-//                            list.add(new Point(lat+0.000001*i,lng+0.000001*i,"test.png",i));
-//                            Log.e(TAG, "run: "+i );
-//                        }
-//                        mapView.addMultiPoint(list);
-//                    }
-//                }).start();
-//                mapView.clearHighlight();
-//                mapView.removeHeatMap();//移除热力图
-//                mapView.removeTms();
-//               mapView.addMbTiles("offlineMap/china3857.mbtiles",6,2);
-//                mapView.closeMultiPointMode();
-                //移除行政区域设备统计结果
-//                mapView.removeCityResult();
-//                 mapView.setShowLatLng(false);
-            }
-        });
+//
+//                //添加行政区域设备统计结果
+////                mapView.addCityResult(21,110,"城市1",22);
+////                mapView.addCityResult(22,111,"城市2",55);
+////                mapView.addCityResult(20,109,"城市3",100);
+////                mapView.addCityResult(21,109,"城市4555",440);
+//                final double lat=21.156638593954;
+//                final double lng=110.366251766682;
+//                mapView.addCustomML(new CustomMPL());
+//
+////                new Thread(new Runnable() {
+////                    @Override
+////                    public void run() {
+////                        List<Heat> list=new ArrayList<>();
+////                        for (int i=0;i<100;i++){
+////                            list.add(new Heat(lat+0.000001*i,lng+0.000001*i,1));
+////                        }
+////                        mapView.addHeatData(list);
+////                    }
+////                }).start();
+////                mapView.addHighlight(45.0,111.0,90f);
+//
+////                new Thread(new Runnable() {
+////                    @Override
+////                    public void run() {
+////                        List<Point> list=new ArrayList<>();
+////                        for (int i=0;i<800;i++){
+////                            list.add(new Point(lat+0.000001*i,lng+0.000001*i,"test.png",i));
+////                        }
+////                        mapView.addMultiPoint(list);
+////                    }
+////                }).start();
+////                mapView.setShowLatLng(true);
+//            }
+//        });
+//        Button button2=findViewById(R.id.button2);
+//        button2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mapView.removeCustomML();
+////                mapView.removeHeatMap();
+////                mapView.closeMultiPointMode();
+////                final double lat=21.156638593954;
+////                final double lng=110.366251766682;
+//////                mapView.openMultiPointMode();
+////                new Thread(new Runnable() {
+////                    @Override
+////                    public void run() {
+////                        List<Point> list=new ArrayList<>();
+////                        for (int i=0;i<800;i++){
+////                            list.add(new Point(lat+0.000001*i,lng+0.000001*i,"test.png",i));
+////                            Log.e(TAG, "run: "+i );
+////                        }
+////                        mapView.addMultiPoint(list);
+////                    }
+////                }).start();
+////                mapView.clearHighlight();
+////                mapView.removeHeatMap();//移除热力图
+////                mapView.removeTms();
+////               mapView.addMbTiles("offlineMap/china3857.mbtiles",6,2);
+////                mapView.closeMultiPointMode();
+//                //移除行政区域设备统计结果
+////                mapView.removeCityResult();
+////                 mapView.setShowLatLng(false);
+//            }
+//        });
+    }
+
+    public void selectPole(View view){
+        new AlertDialog.Builder(MainActivity.this)
+                .setSingleChoiceItems(R.array.type_pole, -1, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                })
+                .setTitle("请选择电杆类型")
+                .setIcon(R.drawable.pole)
+                .setPositiveButton(R.string.dialog_cancel,null)
+                .show();
     }
     class mMapListener implements MapListener {
         /**
@@ -150,6 +169,24 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onCenterChange(double lat, double lng) {
 
+        }
+    }
+
+    class CustomMPL implements CustomMultiPointL{
+        @Override
+        public void onBoundsChange(final MapView mapView, double latMin, double lngMin, double latMax, double lngMax) {
+            final double lat=21.156638593954;
+            final double lng=110.366251766682;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    List<Point> list=new ArrayList<>();
+                    for (int i=0;i<50;i++){
+                        list.add(new Point(lat+0.000001*i,lng+0.000001*i,"test.png",i));
+                    }
+                    mapView.addIcon(list);
+                }
+            }).start();
         }
     }
 }
