@@ -14,23 +14,7 @@
 
     </com.mobile.map.MapView>
 
-    <!--<Button-->
-    <!--android:id="@+id/button"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_weight="1"-->
-    <!--android:text="放大"-->
-    <!--tools:layout_editor_absoluteX="0dp"-->
-    <!--tools:layout_editor_absoluteY="0dp" />-->
 
-    <!--<Button-->
-    <!--android:id="@+id/button2"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignParentTop="true"-->
-    <!--android:layout_marginLeft="120dp"-->
-    <!--android:layout_weight="1"-->
-    <!--android:text="缩小" />-->
     <ImageView
         android:layout_width="45dp"
         android:layout_height="45dp"
@@ -51,6 +35,7 @@
         android:paddingStart="5dp">
 
         <ImageView
+            android:id="@+id/pole"
             android:layout_marginTop="5dp"
             android:layout_width="@dimen/size_icon"
             android:layout_height="@dimen/size_icon"
@@ -59,31 +44,70 @@
             android:onClick="selectPole"/>
 
         <ImageView
+            android:id="@+id/well"
             android:layout_marginTop="5dp"
             android:layout_width="@dimen/size_icon"
             android:layout_height="@dimen/size_icon"
             android:contentDescription="@string/well"
-            android:src="@drawable/well" />
+            android:src="@drawable/well"
+            android:onClick="selectPole"/>
 
         <ImageView
+            android:id="@+id/switchgear"
             android:layout_marginTop="5dp"
             android:layout_width="@dimen/size_icon"
             android:layout_height="@dimen/size_icon"
             android:contentDescription="@string/switchgear"
-            android:src="@drawable/switchgear" />
+            android:src="@drawable/switchgear"
+            android:onClick="selectPole"/>
 
         <ImageView
+            android:id="@+id/box_branch"
             android:layout_marginTop="5dp"
             android:layout_width="@dimen/size_icon"
             android:layout_height="@dimen/size_icon"
             android:contentDescription="@string/branch"
-            android:src="@drawable/box_branch" />
+            android:src="@drawable/box_branch"
+            android:onClick="selectPole"/>
 
         <ImageView
+            android:id="@+id/box_distribution"
             android:layout_marginTop="5dp"
             android:layout_width="@dimen/size_icon"
             android:layout_height="@dimen/size_icon"
             android:contentDescription="@string/distribution"
-            android:src="@drawable/box_distribution" />
+            android:src="@drawable/box_distribution"
+            android:onClick="selectPole"/>
+
+        <ImageView
+            android:id="@+id/fold_point"
+            android:layout_marginTop="5dp"
+            android:layout_width="@dimen/size_icon"
+            android:layout_height="@dimen/size_icon"
+            android:contentDescription="@string/fold_point"
+            android:src="@drawable/fold_point"
+            android:onClick="selectPole"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:paddingEnd="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingStart="5dp">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="清除绘制"
+            android:layout_marginTop="5dp"
+            android:onClick="clearDraw"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="下一条线"
+            android:layout_marginTop="5dp"
+            android:onClick="nextLine"/>
     </LinearLayout>
 </RelativeLayout>

@@ -7,6 +7,7 @@
     <string name="branch">电缆分支箱</string>
     <string name="distribution">配电箱</string>
     <string name="dialog_cancel">取消</string>
+    <string name="fold_point">折点</string>
     <array name="type_pole">
         <item>直线杆</item>
         <item>直线转角杆</item>
@@ -58,4 +59,5 @@
         <item>水泥杆</item>
         <item>钢管杆</item>
     </array>
+    <string name="title_activity_settting_device_info">SetttingDeviceInfo</string>
 </resources>

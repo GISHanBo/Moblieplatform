@@ -11,8 +11,13 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.mobile.map.entity.Device;
 import com.mobile.map.entity.Heat;
+import com.mobile.map.entity.Line;
 import com.mobile.map.entity.Point;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -25,6 +30,7 @@ public class MapView extends WebView {
     private MapListener mapListener;
     private SpatialDatabaseHelper spatialDatabaseHelper;
     private CustomMultiPointL customMultiPointL;
+    private DrawClickListener drawClickListener;
 
 
     /**
@@ -154,12 +160,12 @@ public class MapView extends WebView {
     /**
      * 添加地图定位结果，支持角度旋转角度，默认箭头向下，顺时针旋转
      *
-     * @param lat 纬度
-     * @param lng 经度
+     * @param lat    纬度
+     * @param lng    经度
      * @param rotate 旋转角度 0-360
      */
-    public void addHighlight(Double lat, Double lng,float rotate) {
-        loadMethod("addHighlight(" + lat + "," + lng + ","+rotate+")");
+    public void addHighlight(Double lat, Double lng, float rotate) {
+        loadMethod("addHighlight(" + lat + "," + lng + "," + rotate + ")");
     }
 
     /**
@@ -212,9 +218,10 @@ public class MapView extends WebView {
 
     /**
      * 添加带图标点
+     *
      * @param list
      */
-    public void addIcon(List<Point> list){
+    public void addIcon(List<Point> list) {
         int size = list.size();
         int step = 1;
         if (size > 100) {
@@ -362,12 +369,13 @@ public class MapView extends WebView {
 
     /**
      * 在地图上指定位置添加显示城市名称和设备数量
-     * @param lat 纬度
-     * @param lng 经度
-     * @param cityName 设备名称
+     *
+     * @param lat       纬度
+     * @param lng       经度
+     * @param cityName  设备名称
      * @param deviceNum 设备数量
      */
-    public void addCityResult(double lat,double lng,String cityName,Integer deviceNum) {
+    public void addCityResult(double lat, double lng, String cityName, Integer deviceNum) {
         loadMethod("addPopup(" + lat + "," + lng + ",\"" + cityName + "\"," + deviceNum + ")");
     }
 
@@ -380,9 +388,10 @@ public class MapView extends WebView {
 
     /**
      * 添加热力图数据
+     *
      * @param heatPoints 热力图数据
      */
-    public void addHeatData(List<Heat> heatPoints){
+    public void addHeatData(List<Heat> heatPoints) {
         spatialDatabaseHelper.addHeat(heatPoints);
         loadMethod("addHeatMap()");
     }
@@ -397,16 +406,17 @@ public class MapView extends WebView {
 
     /**
      * 添加自定义的撒点监听,根据地图范围添加数据
+     *
      * @param customMultiPointL 地图变化范围监听
      */
-    public void addCustomML(CustomMultiPointL customMultiPointL){
-        this.customMultiPointL=customMultiPointL;
+    public void addCustomML(CustomMultiPointL customMultiPointL) {
+        this.customMultiPointL = customMultiPointL;
         loadMethod("setCustomMultiPM(" + true + ")");
     }
 
-    public void removeCustomML(){
+    public void removeCustomML() {
         loadMethod("setCustomMultiPM(" + false + ")");
-        customMultiPointL=null;
+        customMultiPointL = null;
     }
 
     private void showPointsIn(double latMin, double lngMin, double latMax, double lngMax) {
@@ -426,7 +436,7 @@ public class MapView extends WebView {
 
     private void showHeatIn(double latMin, double lngMin, double latMax, double lngMax) {
 
-     List<Heat> points = spatialDatabaseHelper.queryHeatPoint(latMin,lngMin,latMax,lngMax);
+        List<Heat> points = spatialDatabaseHelper.queryHeatPoint(latMin, lngMin, latMax, lngMax);
         int size = points.size();
         int step = 1;
         if (size > 100) {
@@ -434,24 +444,25 @@ public class MapView extends WebView {
             step = (int) Math.ceil(result);
         }
         Log.e(TAG, String.valueOf(size));
-        StringBuilder str= new StringBuilder("[");
+        StringBuilder str = new StringBuilder("[");
 
         for (int i = 0; i < size; ) {
             Heat point = points.get(i);
             str.append("{'lat': ").append(point.getLat()).append(",'lon': ").append(point.getLng()).append(",'value': ").append(point.getValue()).append("},");
             i = i + step;
         }
-        str = new StringBuilder(str.substring(0, str.length()-1));
+        str = new StringBuilder(str.substring(0, str.length() - 1));
         str.append("]");
         addHeatData(str.toString());
     }
 
     /**
      * 添加热力图数据显示
+     *
      * @param json json格式数据
      */
-    private void addHeatData(String json){
-        loadMethod("heatMapAddData("+json+")");
+    private void addHeatData(String json) {
+        loadMethod("heatMapAddData(" + json + ")");
     }
 
     /**
@@ -462,8 +473,68 @@ public class MapView extends WebView {
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
             //页面加载完成后实例化数据库管理类
-            spatialDatabaseHelper=SpatialDatabaseHelper.getInstance(getContext());
+            spatialDatabaseHelper = SpatialDatabaseHelper.getInstance(getContext());
         }
+    }
+
+    /**
+     * 设置绘制设备时的点击设备和线的监听
+     *
+     * @param drawListener
+     */
+    public void setDrawListener(DrawClickListener drawListener) {
+        this.drawClickListener = drawListener;
+        loadMethod("startDraw()");
+    }
+
+    /**
+     * 绘制设备
+     *
+     * @param type 0-5分别代表电杆、电缆井、开关柜、电缆分支柜、配电箱、电缆折点
+     */
+    public void drawDevice(Integer type) {
+        loadMethod("drawDevice(" + type + ")");
+    }
+
+    /**
+     * 清除所有绘制设备和线
+     */
+    public void clearDraw() {
+        loadMethod("clearDraw()");
+        drawClickListener = null;
+    }
+
+    /**
+     * 根据ID更新设备信息
+     *
+     * @param device 设备信息
+     */
+    public void updateDevice(Device device) {
+        loadMethod("updateDeviceByID(" + device.toString() + ")");
+    }
+
+    /**
+     * 根据设备在地图内唯一ID，删除设备
+     * @param id 设备id
+     */
+    public void deleteDevice(Long id){
+        loadMethod("removeDevice(" + id + ")");
+    }
+
+    /**
+     * 根据ID更新线路信息
+     *
+     * @param line
+     */
+    public void updateLine(Line line) {
+
+    }
+
+    /**
+     * 绘制下一条线
+     */
+    public void nextLine() {
+        loadMethod("nextObj()");
     }
 
     class JsInteration {
@@ -483,10 +554,11 @@ public class MapView extends WebView {
          * 地图初始化完成
          */
         @JavascriptInterface
-        public void onMapLoad(){
+        public void onMapLoad() {
             mapListener.onMapLoaded();
-            Log.d(TAG,"加载完成");
+            Log.d(TAG, "加载完成");
         }
+
         /**
          * 地图缩放等级改变事件
          *
@@ -515,14 +587,45 @@ public class MapView extends WebView {
         }
 
         @JavascriptInterface
-        public void onHeatViewChange(double latMin, double lngMin, double latMax, double lngMax){
+        public void onHeatViewChange(double latMin, double lngMin, double latMax, double lngMax) {
             showHeatIn(latMin, lngMin, latMax, lngMax);
         }
 
         @JavascriptInterface
         public void onCustomChange(double latMin, double lngMin, double latMax, double lngMax) {
-            if(customMultiPointL!=null){
-                customMultiPointL.onBoundsChange(MapView.this,latMin, lngMin, latMax, lngMax);
+            if (customMultiPointL != null) {
+                customMultiPointL.onBoundsChange(MapView.this, latMin, lngMin, latMax, lngMax);
+            }
+        }
+
+        @JavascriptInterface
+        public void onDeviceClick(String json) {
+            if (drawClickListener != null) {
+                Device device = new Device();
+                try {
+                    Log.e(TAG,json);
+                    JSONObject jsonObject = new JSONObject(json);
+                    device.setId(jsonObject.getLong("id"));
+                    Log.e(TAG,"获取ID"+device.getId());
+                    device.setName(jsonObject.getString("name"));
+                    device.setHeight((float) jsonObject.getDouble("height"));
+                    device.setType(jsonObject.getString("type"));
+                    device.setPicture(jsonObject.getString("picture"));
+                    device.setMaterial(jsonObject.getString("material"));
+                    device.setsLine(jsonObject.getString("sLine"));
+                    device.setCategory(jsonObject.getString("category"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                drawClickListener.deviceClick(device);
+            }
+        }
+
+        @JavascriptInterface
+        public void onLineClick(JSONObject jsonObject) {
+            if (drawClickListener != null) {
+                Line line = new Line();
+                drawClickListener.lineClick(line);
             }
         }
     }

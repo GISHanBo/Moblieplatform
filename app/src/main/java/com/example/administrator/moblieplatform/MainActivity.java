@@ -1,18 +1,22 @@
 package com.example.administrator.moblieplatform;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 
 
 import com.mobile.map.CustomMultiPointL;
+import com.mobile.map.DrawClickListener;
 import com.mobile.map.MapListener;
 import com.mobile.map.MapView;
+import com.mobile.map.entity.Device;
+import com.mobile.map.entity.Line;
 import com.mobile.map.entity.Point;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,13 +24,13 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private MapView mapView;
-    public static String TAG="测试";
+    public static String TAG = "测试";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mapView=findViewById(R.id.mapView);
+        mapView = findViewById(R.id.mapView);
         //打开地图首页
         mapView.setListener(new mMapListener());//设置地图监听
 
@@ -109,55 +113,78 @@ public class MainActivity extends AppCompatActivity {
 //        });
     }
 
-    public void selectPole(View view){
-        new AlertDialog.Builder(MainActivity.this)
-                .setSingleChoiceItems(R.array.type_pole, -1, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                })
-                .setTitle("请选择电杆类型")
-                .setIcon(R.drawable.pole)
-                .setPositiveButton(R.string.dialog_cancel,null)
-                .show();
+    public void selectPole(View view) {
+        Integer type = 0;
+        switch (view.getId()) {
+            case R.id.pole:
+                type = 0;
+                break;
+            case R.id.well:
+                type = 1;
+                break;
+            case R.id.switchgear:
+                type = 2;
+                break;
+            case R.id.box_branch:
+                type = 3;
+                break;
+            case R.id.box_distribution:
+                type = 4;
+                break;
+            case R.id.fold_point:
+                type = 5;
+                break;
+        }
+        mapView.drawDevice(type);
     }
+
+    public void clearDraw(View view) {
+        mapView.clearDraw();
+    }
+
+    public void nextLine(View view) {
+        mapView.nextLine();
+    }
+
     class mMapListener implements MapListener {
         /**
          * 地图加载完成执行操作
          */
         @Override
         public void onMapLoaded() {
-            final double lat=21.156638593954;
-            final double lng=110.366251766682;
+            final double lat = 21.156638593954;
+            final double lng = 110.366251766682;
             mapView.setZoom(14);
-            mapView.setCenter(lat,lng);
-            mapView.addHighlight(lat,lng,0);
+            mapView.setCenter(lat, lng);
+            mapView.addHighlight(lat, lng, 0);
 //            mapView.setZoomLimit(1,5);
 
-            mapView.switchBaseLayer("高德","卫星图无注记");
+            mapView.switchBaseLayer("高德", "卫星图无注记");
+            mapView.setDrawListener(new DrawListener());
 
         }
 
         /**
          * 点击marker监听
+         *
          * @param lat 图标纬度
          * @param lng 图标经度
-         * @param id 图标点编号
+         * @param id  图标点编号
          */
         @Override
-        public void onIconClick(double lat,double lng,Integer id) {
-            Log.e("main", "onIconClick: "+lat+","+lng);
-            Log.e("main", "id: "+id);
+        public void onIconClick(double lat, double lng, Integer id) {
+            Log.e("main", "onIconClick: " + lat + "," + lng);
+            Log.e("main", "id: " + id);
         }
 
         /**
          * 地图缩放等级改变事件
+         *
          * @param zoomLevel 改变后地图缩放等级
          */
         @Override
         public void onZoomChange(double zoomLevel) {
-            Log.e(TAG, "onZoomChange: "+zoomLevel);
+            Log.e(TAG, "onZoomChange: " + zoomLevel);
         }
 
         /**
@@ -172,21 +199,72 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    class CustomMPL implements CustomMultiPointL{
+    class CustomMPL implements CustomMultiPointL {
         @Override
         public void onBoundsChange(final MapView mapView, double latMin, double lngMin, double latMax, double lngMax) {
-            final double lat=21.156638593954;
-            final double lng=110.366251766682;
+            final double lat = 21.156638593954;
+            final double lng = 110.366251766682;
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    List<Point> list=new ArrayList<>();
-                    for (int i=0;i<50;i++){
-                        list.add(new Point(lat+0.000001*i,lng+0.000001*i,"test.png",i));
+                    List<Point> list = new ArrayList<>();
+                    for (int i = 0; i < 50; i++) {
+                        list.add(new Point(lat + 0.000001 * i, lng + 0.000001 * i, "test.png", i));
                     }
                     mapView.addIcon(list);
                 }
             }).start();
+        }
+    }
+
+    class DrawListener implements DrawClickListener {
+
+        @Override
+        public void deviceClick(Device device) {
+            Log.e(TAG, device.toString());
+            Intent intent = new Intent(MainActivity.this, SetDeviceInfo.class);
+            intent.putExtra("id", device.getId());
+            intent.putExtra("type", device.getType());
+            intent.putExtra("name", device.getName());
+            intent.putExtra("height", device.getHeight());
+            intent.putExtra("material", device.getMaterial());
+            intent.putExtra("sLine", device.getsLine());
+            intent.putExtra("picture", device.getPicture());
+            intent.putExtra("category",device.getCategory());
+            startActivityForResult(intent, 1);
+        }
+
+        @Override
+        public void lineClick(Line line) {
+
+        }
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (resultCode) {
+            case 1000:
+                //根据ID删除设备
+                Long id=data.getLongExtra("id",0);
+                mapView.deleteDevice(id);
+                break;
+            case 1001:
+                Device device=new Device();
+                device.setsLine(data.getStringExtra("sLine"));
+                device.setId(data.getLongExtra("id",0));
+                device.setMaterial(data.getStringExtra("material"));
+                device.setPicture(data.getStringExtra("picture"));
+                device.setHeight(data.getFloatExtra("height",0f));
+                device.setType(data.getStringExtra("type"));
+                device.setName(data.getStringExtra("name"));
+                device.setCategory(data.getStringExtra("category"));
+                //更新设备信息
+                mapView.updateDevice(device);
+                break;
+            case 1002:
+                break;
         }
     }
 }

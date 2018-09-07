@@ -6,11 +6,76 @@ package com.mobile.map.entity;
 public class Line {
     private int id;//全局唯一ID
     private String name;//线路名称
-    private String type;//线路类型
-    private String state;//线路状态
-    private float length;//线路长度
-    private String size;//线路规格
-    private String manufacturer;//线路厂家
+    private String type;//线路类别
+    private String abbreviation;//类别简称
+    private float length;//线段长度
+    private String level;//电压等级
+    private String model;//导线型号
+    private String sort;//导线分类
+
+    /**
+     * 获取类别简称
+     * @return
+     */
+    public String getAbbreviation() {
+        return abbreviation;
+    }
+
+    /**
+     * 设置类别简称
+     * @param abbreviation
+     */
+    public void setAbbreviation(String abbreviation) {
+        this.abbreviation = abbreviation;
+    }
+
+    /**
+     * 获取电压等级
+     * @return
+     */
+    public String getLevel() {
+        return level;
+    }
+
+    /**
+     * 设置电压等级
+     * @param level
+     */
+    public void setLevel(String level) {
+        this.level = level;
+    }
+
+    /**
+     * 获取导线型号
+     * @return
+     */
+    public String getModel() {
+        return model;
+    }
+
+    /**
+     * 设置导线型号
+     * @param model
+     */
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    /**
+     * 获取导线分类
+     * @return
+     */
+    public String getSort() {
+        return sort;
+    }
+
+    /**
+     * 设置导线分类
+     * @param sort
+     */
+    public void setSort(String sort) {
+        this.sort = sort;
+    }
 
     /**
      * 获取线路长度
@@ -61,68 +126,20 @@ public class Line {
     }
 
     /**
-     * 获取线路类型
-     * @return 线路类型
+     * 获取线路类别
+     * @return 线路类别
      */
     public String getType() {
         return type;
     }
 
     /**
-     * 设置线路类型
-     * @param type 线路类型
+     * 设置线路类别
+     * @param type 线路类别
      */
     public void setType(String type) {
         this.type = type;
     }
 
-    /**
-     * 获取线路状态
-     * @return 线路状态
-     */
-    public String getState() {
-        return state;
-    }
 
-    /**
-     * 设置线路状态
-     * @param state 线路状态
-     */
-    public void setState(String state) {
-        this.state = state;
-    }
-
-
-
-    /**
-     * 获取线路规格
-     * @return 线路规格
-     */
-    public String getSize() {
-        return size;
-    }
-
-    /**
-     * 设置线路规格
-     * @param size 线路规格
-     */
-    public void setSize(String size) {
-        this.size = size;
-    }
-
-    /**
-     * 获取线路厂家
-     * @return 线路厂家
-     */
-    public String getManufacturer() {
-        return manufacturer;
-    }
-
-    /**
-     * 设置线路厂家
-     * @param manufacturer 线路厂家
-     */
-    public void setManufacturer(String manufacturer) {
-        this.manufacturer = manufacturer;
-    }
 }
