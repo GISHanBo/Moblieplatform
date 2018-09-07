@@ -4,7 +4,7 @@ package com.mobile.map.entity;
  * 线路实体类
  */
 public class Line {
-    private int id;//全局唯一ID
+    private long id;//全局唯一ID
     private String name;//线路名称
     private String type;//线路类别
     private String abbreviation;//类别简称
@@ -12,6 +12,23 @@ public class Line {
     private String level;//电压等级
     private String model;//导线型号
     private String sort;//导线分类
+    private LineStyle lineStyle;//线样式
+
+    /**
+     * 获取线样式
+     * @return 线样式
+     */
+    public LineStyle getLineStyle() {
+        return lineStyle;
+    }
+
+    /**
+     * 设置线样式
+     * @param lineStyle 线样式
+     */
+    public void setLineStyle(LineStyle lineStyle) {
+        this.lineStyle = lineStyle;
+    }
 
     /**
      * 获取类别简称
@@ -97,7 +114,7 @@ public class Line {
      * 获取ID
      * @return 线路地图ID
      */
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -105,7 +122,7 @@ public class Line {
      * 设置线路地图ID
      * @param id
      */
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -141,5 +158,9 @@ public class Line {
         this.type = type;
     }
 
-
+//    @Override
+//    public String toString() {
+//        return "{'id':"+id+",'name':'"+name+"','type':'"+type+"','height':"+height+",'material':'"+material
+//                +"','sLine':'"+sLine+"','picture':'"+picture+"','category':'"+category+"'}";
+//    }
 }

@@ -3,27 +3,73 @@ drawObj = {};
 /**
  * 初始化绘制
  */
-function startDraw() {
+function startDrawDevice() {
+    //设置为画设备模式
+    drawObj.isDrawDevice = true;
+    //画线时捕捉设备缓存区
+    drawObj.tempDeviceId = null;
     //初始化设备点击事件
     drawObj.deviceClick = function (e) {
-        var marker=e.target;
-        var obj={
-            id:marker.id,
-            name:marker.name||"",
-            type:marker.type||"",
-            height:marker.height||0,
-            material:marker.material||"",
-            sLine:marker.sLine||"",
-            picture:marker.picture||"",
-            category:marker.category||""
+        if (drawObj.isDrawDevice) {
+            drawObj.deviceClick_detail(e)
+        } else {
+            drawObj.deviceClick_catch(e)
+        }
+    };
+    //绘制设备模式下，点击设备展示设备信息
+    drawObj.deviceClick_detail = function (e) {
+        var marker = e.target;
+        var obj = {
+            id: marker.id,
+            name: marker.name || "",
+            type: marker.type || "",
+            height: marker.height || 0,
+            material: marker.material || "",
+            sLine: marker.sLine || "",
+            picture: marker.picture || "",
+            category: marker.category || ""
         };
-        obj=JSON.stringify(obj);
+        obj = JSON.stringify(obj);
         window.Android.onDeviceClick(obj);
+    };
+    //画线模式下，点击设备展示设备捕捉
+    drawObj.deviceClick_catch = function (e) {
+        var id = e.target.id;
+        var latlng = e.latlng;
+        L.popup()
+            .setLatLng(latlng)
+            .setContent('<label onclick="closePopup(&apos;' + id + '&apos;)" style="border-bottom: 1px solid blue;line-height:14px">捕捉设备' + id + '</label>')
+            .openOn(map);
     };
     //初始化线点击事件
     drawObj.lineClick = function (e) {
         window.Android.onLineClick();
     };
+
+}
+
+/**
+ * 关闭捕捉的popup，保留捕捉点的id
+ * @param id
+ */
+function closePopup(id) {
+    map.closePopup();
+    if (drawObj.tempDeviceId != null) {
+        var lineId = Date.now();
+        var points = [];
+        map.eachLayer(function (layer) {
+            if (layer.getAttribution() == "mssDevice" ) {
+                if(layer.id == id || layer.id == drawObj.tempDeviceId){
+                    layer.lineId = lineId;
+                    points.push(layer.getLatLng());
+                }
+            }
+        });
+        drawObj.tempDeviceId = null;
+        drawLine(lineId, points);
+    } else {
+        drawObj.tempDeviceId = id;
+    }
 }
 
 /**
@@ -72,47 +118,50 @@ function drawDevice(type) {
     marker.id = Date.now();
     switch (type) {
         case 0:
-            marker.type="电杆";
+            marker.type = "电杆";
             break;
         case 1:
-            marker.type="电缆井";
+            marker.type = "电缆井";
             break;
         case 2:
-            marker.type="开关柜";
+            marker.type = "开关柜";
             break;
         case 3:
-            marker.type="电缆分支柜";
+            marker.type = "电缆分支柜";
             break;
         case 4:
-            marker.type="配电箱";
+            marker.type = "配电箱";
             break;
         case 5:
-            marker.type="电缆折点";
+            marker.type = "电缆折点";
             break;
-        default:break;
+        default:
+            break;
     }
-    marker.on('click',drawObj.deviceClick);
+    marker.on('click', drawObj.deviceClick);
+}
+
+function startDrawLine() {
+    //设置为画线模式
+    drawObj.isDrawDevice = false;
+    console.log("开始绘制线");
+
 }
 
 /**
  * 自动画线
  * @param point
  */
-function drawLine(point) {
-    pre_devices.push([point.lat, point.lng]);
-    if (pre_devices.length == 2) {
-        currentLine = L.polyline(pre_devices,
-            {
-                attribution: "mssLine",
-                zIndexOffset: 500
-            }
-        ).addTo(map);
-        currentLine.id = Date.now();
-    } else if (pre_devices.length > 2) {
-        currentLine.addLatLng(point);
-    }
-
-
+function drawLine(lineId, points) {
+    console.log("绘制线"+lineId);
+    console.log(points.length);
+    var line = L.polyline(points,
+        {
+            attribution: "mssLine",
+            zIndexOffset: 500
+        }
+    ).addTo(map);
+    line.id = lineId;
 }
 
 /**
@@ -238,13 +287,13 @@ function showLineLabels(id) {
 function updateDeviceByID(json) {
     map.eachLayer(function (layer) {
         if (layer.getAttribution() == "mssDevice" && layer.id == json.id) {
-            layer.name=json.name;
-            layer.type=json.type;
-            layer.height=json.height;
-            layer.material=json.material;
-            layer.sLine=json.sLine;
-            layer.picture=json.picture;
-            layer.category=json.category;
+            layer.name = json.name;
+            layer.type = json.type;
+            layer.height = json.height;
+            layer.material = json.material;
+            layer.sLine = json.sLine;
+            layer.picture = json.picture;
+            layer.category = json.category;
         }
     });
 }

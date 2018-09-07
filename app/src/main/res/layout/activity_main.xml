@@ -96,7 +96,8 @@
         android:paddingEnd="5dp"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
-        android:paddingStart="5dp">
+        android:paddingStart="5dp"
+        android:orientation="vertical">
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -109,5 +110,11 @@
             android:text="下一条线"
             android:layout_marginTop="5dp"
             android:onClick="nextLine"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="绘制线"
+            android:layout_marginTop="5dp"
+            android:onClick="startDrawLine"/>
     </LinearLayout>
 </RelativeLayout>

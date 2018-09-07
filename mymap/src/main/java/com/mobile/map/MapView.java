@@ -484,7 +484,7 @@ public class MapView extends WebView {
      */
     public void setDrawListener(DrawClickListener drawListener) {
         this.drawClickListener = drawListener;
-        loadMethod("startDraw()");
+        loadMethod("startDrawDevice()");
     }
 
     /**
@@ -494,6 +494,13 @@ public class MapView extends WebView {
      */
     public void drawDevice(Integer type) {
         loadMethod("drawDevice(" + type + ")");
+    }
+
+    /**
+     * 开始绘制线，点击设备不再弹出设备信息，而是捕捉设备
+     */
+    public void startDrawLine(){
+        loadMethod("startDrawLine()");
     }
 
     /**

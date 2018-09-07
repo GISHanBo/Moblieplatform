@@ -146,22 +146,21 @@ public class MainActivity extends AppCompatActivity {
         mapView.nextLine();
     }
 
+    public void startDrawLine(View view) {
+        mapView.startDrawLine();
+    }
+
     class mMapListener implements MapListener {
         /**
          * 地图加载完成执行操作
          */
         @Override
         public void onMapLoaded() {
-            final double lat = 21.156638593954;
-            final double lng = 110.366251766682;
+            double lat = 21.156638593954;
+            double lng = 110.366251766682;
             mapView.setZoom(14);
             mapView.setCenter(lat, lng);
-            mapView.addHighlight(lat, lng, 0);
-//            mapView.setZoomLimit(1,5);
-
-            mapView.switchBaseLayer("高德", "卫星图无注记");
             mapView.setDrawListener(new DrawListener());
-
         }
 
         /**
@@ -217,11 +216,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 点击设备和线路信息的处理
+     */
     class DrawListener implements DrawClickListener {
 
         @Override
         public void deviceClick(Device device) {
-            Log.e(TAG, device.toString());
             Intent intent = new Intent(MainActivity.this, SetDeviceInfo.class);
             intent.putExtra("id", device.getId());
             intent.putExtra("type", device.getType());
@@ -236,7 +237,19 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void lineClick(Line line) {
-
+            Intent intent=new Intent(MainActivity.this,SetLineInfo.class);
+            intent.putExtra("id", line.getId());
+            intent.putExtra("type", line.getType());
+            intent.putExtra("name", line.getName());
+            intent.putExtra("abbreviation", line.getAbbreviation());
+            intent.putExtra("length", line.getLength());
+            intent.putExtra("level", line.getLevel());
+            intent.putExtra("model", line.getModel());
+            intent.putExtra("sort", line.getSort());
+            intent.putExtra("showLabel", line.getLineStyle().getShowLabel());
+            intent.putExtra("width", line.getLineStyle().getWidth());
+            intent.putExtra("color", line.getLineStyle().getColor());
+            startActivityForResult(intent,2);
         }
     }
 
