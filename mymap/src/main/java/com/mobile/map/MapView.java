@@ -14,6 +14,7 @@ import android.webkit.WebViewClient;
 import com.mobile.map.entity.Device;
 import com.mobile.map.entity.Heat;
 import com.mobile.map.entity.Line;
+import com.mobile.map.entity.LineStyle;
 import com.mobile.map.entity.Point;
 
 import org.json.JSONException;
@@ -524,7 +525,7 @@ public class MapView extends WebView {
      * 根据设备在地图内唯一ID，删除设备
      * @param id 设备id
      */
-    public void deleteDevice(Long id){
+    public void deleteDevice(long id){
         loadMethod("removeDevice(" + id + ")");
     }
 
@@ -534,7 +535,12 @@ public class MapView extends WebView {
      * @param line
      */
     public void updateLine(Line line) {
+        Log.e(TAG,line.toString());
+        loadMethod("updateLineByID(" + line.toString() + ")");
+    }
 
+    public void deleteLine(long id){
+        loadMethod("removeLine(" + id + ")");
     }
 
     /**
@@ -610,10 +616,8 @@ public class MapView extends WebView {
             if (drawClickListener != null) {
                 Device device = new Device();
                 try {
-                    Log.e(TAG,json);
                     JSONObject jsonObject = new JSONObject(json);
                     device.setId(jsonObject.getLong("id"));
-                    Log.e(TAG,"获取ID"+device.getId());
                     device.setName(jsonObject.getString("name"));
                     device.setHeight((float) jsonObject.getDouble("height"));
                     device.setType(jsonObject.getString("type"));
@@ -629,9 +633,29 @@ public class MapView extends WebView {
         }
 
         @JavascriptInterface
-        public void onLineClick(JSONObject jsonObject) {
+        public void onLineClick(String json) {
+            Log.e(TAG,json);
             if (drawClickListener != null) {
                 Line line = new Line();
+                try {
+                    JSONObject jsonObject=new JSONObject(json);
+                    line.setId(jsonObject.getLong("id"));
+                    line.setName(jsonObject.getString("name"));
+                    line.setType(jsonObject.getString("type"));
+                    line.setAbbreviation(jsonObject.getString("abbreviation"));
+                    line.setLength((float)jsonObject.getDouble("length"));
+                    line.setLevel(jsonObject.getString("level"));
+                    line.setModel(jsonObject.getString("model"));
+                    line.setSort(jsonObject.getString("sort"));
+                    LineStyle lineStyle=new LineStyle();
+                    lineStyle.setColor(jsonObject.getString("color"));
+                    lineStyle.setOpacity((float)jsonObject.getDouble("opacity"));
+                    lineStyle.setWidth((byte) jsonObject.getInt("width"));
+                    lineStyle.setShowLabel(jsonObject.getBoolean("showLabel"));
+                    line.setLineStyle(lineStyle);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 drawClickListener.lineClick(line);
             }
         }

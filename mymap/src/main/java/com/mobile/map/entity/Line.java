@@ -158,9 +158,11 @@ public class Line {
         this.type = type;
     }
 
-//    @Override
-//    public String toString() {
-//        return "{'id':"+id+",'name':'"+name+"','type':'"+type+"','height':"+height+",'material':'"+material
-//                +"','sLine':'"+sLine+"','picture':'"+picture+"','category':'"+category+"'}";
-//    }
+    @Override
+    public String toString() {
+        return "{'id':"+id+",'name':'"+name+"','type':'"+type+"','abbreviation':'"+abbreviation+"','length':"+length
+                +",'level':'"+level+"','model':'"+model+"','sort':'"+sort
+                +"','color':'"+lineStyle.getColor()+"','opacity':"+lineStyle.getOpacity()
+                +",'width':"+lineStyle.getWidth()+",'showLabel':"+lineStyle.getShowLabel()+"}";
+    }
 }

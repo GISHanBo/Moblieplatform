@@ -14,6 +14,7 @@ import com.mobile.map.MapListener;
 import com.mobile.map.MapView;
 import com.mobile.map.entity.Device;
 import com.mobile.map.entity.Line;
+import com.mobile.map.entity.LineStyle;
 import com.mobile.map.entity.Point;
 
 import org.json.JSONObject;
@@ -231,13 +232,13 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("material", device.getMaterial());
             intent.putExtra("sLine", device.getsLine());
             intent.putExtra("picture", device.getPicture());
-            intent.putExtra("category",device.getCategory());
+            intent.putExtra("category", device.getCategory());
             startActivityForResult(intent, 1);
         }
 
         @Override
         public void lineClick(Line line) {
-            Intent intent=new Intent(MainActivity.this,SetLineInfo.class);
+            Intent intent = new Intent(MainActivity.this, SetLineInfo.class);
             intent.putExtra("id", line.getId());
             intent.putExtra("type", line.getType());
             intent.putExtra("name", line.getName());
@@ -249,7 +250,8 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("showLabel", line.getLineStyle().getShowLabel());
             intent.putExtra("width", line.getLineStyle().getWidth());
             intent.putExtra("color", line.getLineStyle().getColor());
-            startActivityForResult(intent,2);
+            intent.putExtra("opacity", line.getLineStyle().getOpacity());
+            startActivityForResult(intent, 2);
         }
     }
 
@@ -260,16 +262,16 @@ public class MainActivity extends AppCompatActivity {
         switch (resultCode) {
             case 1000:
                 //根据ID删除设备
-                Long id=data.getLongExtra("id",0);
+                Long id = data.getLongExtra("id", 0);
                 mapView.deleteDevice(id);
                 break;
             case 1001:
-                Device device=new Device();
+                Device device = new Device();
                 device.setsLine(data.getStringExtra("sLine"));
-                device.setId(data.getLongExtra("id",0));
+                device.setId(data.getLongExtra("id", 0));
                 device.setMaterial(data.getStringExtra("material"));
                 device.setPicture(data.getStringExtra("picture"));
-                device.setHeight(data.getFloatExtra("height",0f));
+                device.setHeight(data.getFloatExtra("height", 0f));
                 device.setType(data.getStringExtra("type"));
                 device.setName(data.getStringExtra("name"));
                 device.setCategory(data.getStringExtra("category"));
@@ -277,6 +279,29 @@ public class MainActivity extends AppCompatActivity {
                 mapView.updateDevice(device);
                 break;
             case 1002:
+                Line line = new Line();
+                line.setId(data.getLongExtra("id", 0));
+                line.setType(data.getStringExtra("type"));
+                line.setName(data.getStringExtra("name"));
+                line.setAbbreviation(data.getStringExtra("abbreviation"));
+                line.setLength(data.getFloatExtra("length",0f));
+                line.setLevel(data.getStringExtra("level"));
+                line.setModel(data.getStringExtra("model"));
+                line.setSort(data.getStringExtra("sort"));
+                LineStyle lineStyle=new LineStyle();
+                lineStyle.setShowLabel(data.getBooleanExtra("showLabel",false));
+                lineStyle.setWidth(data.getByteExtra("width", (byte) 3));
+                lineStyle.setColor(data.getStringExtra("color"));
+                lineStyle.setOpacity(data.getFloatExtra("opacity",0f));
+                line.setLineStyle(lineStyle);
+                mapView.updateLine(line);
+                break;
+            case 1003:
+                //根据ID删除设备
+                Long id2 = data.getLongExtra("id", 0);
+                mapView.deleteLine(id2);
+                break;
+            default:
                 break;
         }
     }

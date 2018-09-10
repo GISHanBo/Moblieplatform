@@ -13,11 +13,15 @@ public class LineStyle {
     /**
      * 线宽，单位为像素
      */
-    private Integer width;
+    private byte width;
     /**
      * 线路颜色
      */
     private String color;
+    /**
+     * 线的透明度
+     */
+    private float opacity;
 
     /**
      * 获取是否展示注记
@@ -39,7 +43,7 @@ public class LineStyle {
      * 获取线宽
      * @return 线宽单位像素
      */
-    public Integer getWidth() {
+    public byte getWidth() {
         return width;
     }
 
@@ -47,7 +51,7 @@ public class LineStyle {
      * 设置线宽
      * @param width 线宽单位像素
      */
-    public void setWidth(Integer width) {
+    public void setWidth(byte width) {
         this.width = width;
     }
 
@@ -65,5 +69,29 @@ public class LineStyle {
      */
     public void setColor(String color) {
         this.color = color;
+    }
+
+    /**
+     * 获取注记状态
+     * @return
+     */
+    public boolean isShowLabel() {
+        return showLabel;
+    }
+
+    /**
+     * 获取透明度
+     * @return 0-1的透明度
+     */
+    public float getOpacity() {
+        return opacity;
+    }
+
+    /**
+     * 设置透明度
+     * @param opacity 0-1的透明度
+     */
+    public void setOpacity(float opacity) {
+        this.opacity = opacity;
     }
 }

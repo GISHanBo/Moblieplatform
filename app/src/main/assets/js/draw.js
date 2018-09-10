@@ -41,11 +41,6 @@ function startDrawDevice() {
             .setContent('<label onclick="closePopup(&apos;' + id + '&apos;)" style="border-bottom: 1px solid blue;line-height:14px">捕捉设备' + id + '</label>')
             .openOn(map);
     };
-    //初始化线点击事件
-    drawObj.lineClick = function (e) {
-        window.Android.onLineClick();
-    };
-
 }
 
 /**
@@ -58,8 +53,8 @@ function closePopup(id) {
         var lineId = Date.now();
         var points = [];
         map.eachLayer(function (layer) {
-            if (layer.getAttribution() == "mssDevice" ) {
-                if(layer.id == id || layer.id == drawObj.tempDeviceId){
+            if (layer.getAttribution() == "mssDevice") {
+                if (layer.id == id || layer.id == drawObj.tempDeviceId) {
                     layer.lineId = lineId;
                     points.push(layer.getLatLng());
                 }
@@ -145,7 +140,27 @@ function startDrawLine() {
     //设置为画线模式
     drawObj.isDrawDevice = false;
     console.log("开始绘制线");
-
+    //初始化线点击事件
+    drawObj.lineClick = function (line) {
+        var obj = {
+            id: line.id,
+            name: line.name || "",
+            type: line.type || "",
+            abbreviation: line.abbreviation || "",
+            length: line.length,
+            level: line.level || "",
+            model: line.model || "",
+            sort: line.sort || "",
+            color: line.options.color || "#3388ff",
+            opacity: line.options.opacity || 1,
+            width: line.options.weight || 3,
+            showLabel: line.showLabel || false
+        };
+        window.Android.onLineClick(JSON.stringify(obj));
+    };
+    drawObj._lineClick = function (e) {
+        drawObj.lineClick(e.target);
+    }
 }
 
 /**
@@ -153,15 +168,17 @@ function startDrawLine() {
  * @param point
  */
 function drawLine(lineId, points) {
-    console.log("绘制线"+lineId);
-    console.log(points.length);
     var line = L.polyline(points,
         {
             attribution: "mssLine",
             zIndexOffset: 500
         }
     ).addTo(map);
+    line.on('click', drawObj._lineClick);
     line.id = lineId;
+    line.length = map.distance(points[0], points[1]);
+    drawObj.lineClick(line);
+
 }
 
 /**
@@ -184,8 +201,8 @@ function removeDevice(id) {
 }
 
 /**
- * 移除设备对应的线
- * @param {number} id
+ * 移除线
+ * @param id 线id
  */
 function removeLine(id) {
     map.eachLayer(function (layer) {
@@ -231,18 +248,31 @@ function clearDraw() {
  * @param text
  * @param lineId
  */
-function addLabel(lat, lng, text, lineId) {
+function addLabel(latLng, text, lineId) {
     var myIcon = L.divIcon({
-        html: "狗子",
+        html: text,
         className: 'mssLabel',
         iconSize: 30
     });
-    var label = L.marker([31.864942016, 117.2882028929], {
+    var label = L.marker(latLng, {
         icon: myIcon,
         attribution: "mssLabel",
-        zIndexOffset: 502
+        zIndexOffset: 502,
+        interactive:false
     }).addTo(map);
     label.lineId = lineId;
+}
+
+/**
+ * 根据线设备id移除对应的标注
+ * @param {number} lineId 标注对应的线id
+ */
+function removeLabel(lineId) {
+    map.eachLayer(function (layer) {
+        if (layer.getAttribution() == "mssLabel" && layer.lineId == lineId) {
+            map.removeLayer(layer);
+        }
+    });
 }
 
 function getLineDisTo(line, index) {
@@ -294,6 +324,39 @@ function updateDeviceByID(json) {
             layer.sLine = json.sLine;
             layer.picture = json.picture;
             layer.category = json.category;
+        }
+    });
+}
+
+/**
+ * 更新id相同的线路信息
+ * @param {JSON}json json格式设备信息
+ */
+function updateLineByID(json) {
+    map.eachLayer(function (layer) {
+        if (layer.getAttribution() == "mssLine" && layer.id == json.id) {
+            //更新信息
+            layer.name = json.name;
+            layer.type = json.type;
+            layer.abbreviation = json.abbreviation;
+            layer.level = json.level;
+            layer.model = json.model;
+            layer.sort = json.sort;
+
+            //更新样式
+            layer.setStyle({
+                color:json.color,
+                opacity:json.opacity,
+                weight:json.width
+            });
+            if(json.showLabel&&!layer.showLabel){
+                console.log("添加注记");
+                addLabel(layer.getCenter(),layer.name,layer.id);
+            }else if(!json.showLabel&&layer.showLabel) {
+                console.log("移除注记");
+                removeLabel(layer.id);
+            }
+            layer.showLabel=json.showLabel;
         }
     });
 }
