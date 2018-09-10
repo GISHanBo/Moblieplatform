@@ -143,9 +143,6 @@ public class MainActivity extends AppCompatActivity {
         mapView.clearDraw();
     }
 
-    public void nextLine(View view) {
-        mapView.nextLine();
-    }
 
     public void startDrawLine(View view) {
         mapView.startDrawLine();

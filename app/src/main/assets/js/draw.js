@@ -1,4 +1,4 @@
-drawObj = {};
+var drawObj = {};
 
 /**
  * 初始化绘制
@@ -35,11 +35,26 @@ function startDrawDevice() {
     //画线模式下，点击设备展示设备捕捉
     drawObj.deviceClick_catch = function (e) {
         var id = e.target.id;
-        var latlng = e.latlng;
         L.popup()
-            .setLatLng(latlng)
+            .setLatLng(e.latlng)
             .setContent('<label onclick="closePopup(&apos;' + id + '&apos;)" style="border-bottom: 1px solid blue;line-height:14px">捕捉设备' + id + '</label>')
             .openOn(map);
+    };
+    //拖动设备点事件
+    drawObj.device_drag = function (e) {
+        if (e.target.lineId&&e.target.lineId.length) {
+            e.target.lineId.forEach(function (lineId) {
+                drawObj.lineUpdate(lineId, e.target.id, e.target.getLatLng());
+            });
+        }
+    };
+    drawObj.lineUpdate = function (lineId, id, latlng) {
+        console.log("拖动"+lineId+"-"+id);
+        map.eachLayer(function (layer) {
+            if (layer.getAttribution() == "mssDevice" && layer.lineId.indexOf(lineId)>=0 && layer.id != id) {
+                updateLinePoints(lineId, [layer.getLatLng(), latlng]);
+            }
+        })
     };
 }
 
@@ -49,22 +64,31 @@ function startDrawDevice() {
  */
 function closePopup(id) {
     map.closePopup();
-    if (drawObj.tempDeviceId != null) {
-        var lineId = Date.now();
-        var points = [];
-        map.eachLayer(function (layer) {
-            if (layer.getAttribution() == "mssDevice") {
-                if (layer.id == id || layer.id == drawObj.tempDeviceId) {
-                    layer.lineId = lineId;
-                    points.push(layer.getLatLng());
-                }
-            }
-        });
-        drawObj.tempDeviceId = null;
-        drawLine(lineId, points);
-    } else {
+    if (drawObj.tempDeviceId == null) {
         drawObj.tempDeviceId = id;
+        return ;
     }
+    var superId=0;
+    var hasSuperId=false;
+    var lineId = Date.now();
+    var points = [];
+    map.eachLayer(function (layer) {
+        if (layer.getAttribution() == "mssDevice") {
+            if (layer.id == id || layer.id == drawObj.tempDeviceId) {
+                //判断属性是否存在
+                if(!layer.hasOwnProperty("lineId")){
+                    layer.lineId=[];
+                }
+                if(!layer.hasOwnProperty("hasSuperId")){
+
+                }
+                layer.lineId.push(lineId);
+                points.push(layer.getLatLng());
+            }
+        }
+    });
+    drawObj.tempDeviceId = null;
+    drawLine(lineId, points);
 }
 
 /**
@@ -134,20 +158,26 @@ function drawDevice(type) {
             break;
     }
     marker.on('click', drawObj.deviceClick);
+    marker.on('drag', drawObj.device_drag)
 }
 
+/**
+ * 开始绘制线
+ */
 function startDrawLine() {
     //设置为画线模式
     drawObj.isDrawDevice = false;
     console.log("开始绘制线");
     //初始化线点击事件
     drawObj.lineClick = function (line) {
+        var points = line.getLatLngs();
+        var length = map.distance(points[0], points[1]);
         var obj = {
             id: line.id,
             name: line.name || "",
             type: line.type || "",
             abbreviation: line.abbreviation || "",
-            length: line.length,
+            length: length,
             level: line.level || "",
             model: line.model || "",
             sort: line.sort || "",
@@ -176,16 +206,7 @@ function drawLine(lineId, points) {
     ).addTo(map);
     line.on('click', drawObj._lineClick);
     line.id = lineId;
-    line.length = map.distance(points[0], points[1]);
     drawObj.lineClick(line);
-
-}
-
-/**
- * 绘制下一个物体
- */
-function nextObj() {
-
 }
 
 /**
@@ -208,6 +229,16 @@ function removeLine(id) {
     map.eachLayer(function (layer) {
         if (layer.getAttribution() == "mssLine" && layer.id == id) {
             map.removeLayer(layer);
+            map.eachLayer(function (device) {
+              if(device.getAttribution() == "mssDevice" && device.lineId){
+                 for (var i=0;i<device.lineId.length;i++){
+                     if(id==device.lineId[i]){
+                         device.lineId.splice(i,1);
+                         break;
+                     }
+                 }
+              }
+            });
         }
     });
 }
@@ -236,9 +267,8 @@ function clearDraw() {
     removeLayer("mssDevice");
     removeLayer("mssLine");
     removeLayer("mssLabel");
-    delete drawObj.deviceClick;
-    delete drawObj.lineClick;
-    nextObj();
+    drawObj={};
+
 }
 
 /**
@@ -258,7 +288,7 @@ function addLabel(latLng, text, lineId) {
         icon: myIcon,
         attribution: "mssLabel",
         zIndexOffset: 502,
-        interactive:false
+        interactive: false
     }).addTo(map);
     label.lineId = lineId;
 }
@@ -275,17 +305,17 @@ function removeLabel(lineId) {
     });
 }
 
-function getLineDisTo(line, index) {
-
-}
-
 /**
- * 返回线的点数
- * @param line
- * @returns {*}
+ * 更新注记位置
+ * @param lineId
+ * @param point
  */
-function getLinePCount(line) {
-    return line.getLatLngs().length;
+function updateLabel(lineId, point) {
+    map.eachLayer(function (layer) {
+        if (layer.getAttribution() == "mssLabel" && layer.lineId == lineId) {
+            layer.setLatLng(point);
+        }
+    });
 }
 
 /**
@@ -298,16 +328,6 @@ function getLineByID(id) {
             return layer;
         }
     });
-}
-
-/**
- * 绘制线的标注
- * @param {number} id
- */
-function showLineLabels(id) {
-    var line = getLineByID(id);
-    var points = line.getLatLngs();
-
 }
 
 /**
@@ -345,20 +365,36 @@ function updateLineByID(json) {
 
             //更新样式
             layer.setStyle({
-                color:json.color,
-                opacity:json.opacity,
-                weight:json.width
+                color: json.color,
+                opacity: json.opacity,
+                weight: json.width
             });
-            if(json.showLabel&&!layer.showLabel){
+            if (json.showLabel && !layer.showLabel) {
                 console.log("添加注记");
-                addLabel(layer.getCenter(),layer.name,layer.id);
-            }else if(!json.showLabel&&layer.showLabel) {
+                addLabel(layer.getCenter(), layer.name, layer.id);
+            } else if (!json.showLabel && layer.showLabel) {
                 console.log("移除注记");
                 removeLabel(layer.id);
             }
-            layer.showLabel=json.showLabel;
+            layer.showLabel = json.showLabel;
         }
     });
+}
+
+/**
+ * 根据端点变化，更新线的位置
+ * @param id
+ * @param {Array} points
+ */
+function updateLinePoints(id, points) {
+    map.eachLayer(function (layer) {
+        if (layer.getAttribution() == "mssLine" && layer.id == id) {
+            layer.setLatLngs(points);
+            if (layer.showLabel) {
+                updateLabel(id, layer.getCenter())
+            }
+        }
+    })
 }
 
 /**

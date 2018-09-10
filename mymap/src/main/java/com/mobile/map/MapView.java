@@ -535,20 +535,17 @@ public class MapView extends WebView {
      * @param line
      */
     public void updateLine(Line line) {
-        Log.e(TAG,line.toString());
         loadMethod("updateLineByID(" + line.toString() + ")");
     }
 
+    /**
+     * 根据线id删除线
+     * @param id
+     */
     public void deleteLine(long id){
         loadMethod("removeLine(" + id + ")");
     }
 
-    /**
-     * 绘制下一条线
-     */
-    public void nextLine() {
-        loadMethod("nextObj()");
-    }
 
     class JsInteration {
         /**

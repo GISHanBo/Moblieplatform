@@ -104,12 +104,7 @@
             android:text="清除绘制"
             android:layout_marginTop="5dp"
             android:onClick="clearDraw"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="下一条线"
-            android:layout_marginTop="5dp"
-            android:onClick="nextLine"/>
+
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
