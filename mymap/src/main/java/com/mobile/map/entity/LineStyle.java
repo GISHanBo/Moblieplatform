@@ -73,7 +73,7 @@ public class LineStyle {
 
     /**
      * 获取注记状态
-     * @return
+     * @return 标注显示状态该
      */
     public boolean isShowLabel() {
         return showLabel;

@@ -409,5 +409,59 @@ function getDeviceByID(id) {
     });
 }
 
+/**
+ * 导出线路信息
+ */
+function exportLine() {
+    var lines=[];
+    map.eachLayer(function (layer) {
+        if ("mssLine"== layer.getAttribution()) {
+            var points = layer.getLatLngs();
+            var length = map.distance(points[0], points[1]);
+            var line={
+                id: layer.id,
+                name: layer.name || "",
+                type: layer.type || "",
+                abbreviation: layer.abbreviation || "",
+                length: length,
+                level: layer.level || "",
+                model: layer.model || "",
+                sort: layer.sort || "",
+                color: layer.options.color || "#3388ff",
+                opacity: layer.options.opacity || 1,
+                width: layer.options.weight || 3,
+                showLabel: layer.showLabel || false,
+                points:points
+            };
+            lines.push(line);
+        }
+    });
+    window.Android.exportLine(JSON.stringify(lines));
+}
+
+/**
+ * 导出设备信息
+ */
+function exportDevice() {
+    var devices=[];
+    map.eachLayer(function (layer) {
+        if ("mssDevice"== layer.getAttribution()) {
+            var device={
+                id: layer.id,
+                name: layer.name || "",
+                type: layer.type || "",
+                height: layer.height || 0,
+                material: layer.material || "",
+                sLine: layer.sLine || "",
+                picture: layer.picture || "",
+                category: layer.category || "",
+                point:layer.getLatLng()
+            };
+            devices.push(device);
+        }
+    });
+    window.Android.exportDevice(JSON.stringify(devices));
+}
+
 
 

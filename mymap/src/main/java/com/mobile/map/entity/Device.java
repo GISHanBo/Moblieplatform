@@ -15,7 +15,7 @@ public class Device {
 
     /**
      * 获取设备类型
-     * @return
+     * @return 设备类型
      */
     public String getCategory() {
         return category;
@@ -23,7 +23,7 @@ public class Device {
 
     /**
      * 设置设备类型
-     * @param category
+     * @param category 设备类型
      */
     public void setCategory(String category) {
         this.category = category;
@@ -31,7 +31,7 @@ public class Device {
 
     /**
      * 获取全局唯一id
-     * @return
+     * @return id
      */
     public long getId() {
         return id;
@@ -39,7 +39,7 @@ public class Device {
 
     /**
      * 设置id
-     * @param id
+     * @param id 设备id
      */
     public void setId(long id) {
         this.id = id;
@@ -47,7 +47,7 @@ public class Device {
 
     /**
      * 获取设备名称
-     * @return
+     * @return 设备名称
      */
     public String getName() {
         return name;
@@ -63,7 +63,7 @@ public class Device {
 
     /**
      * 获取设备类别
-     * @return
+     * @return 设备类别
      */
     public String getType() {
         return type;
@@ -79,7 +79,7 @@ public class Device {
 
     /**
      * 获取设备高度
-     * @return
+     * @return 设备高度
      */
     public float getHeight() {
         return height;
@@ -87,7 +87,7 @@ public class Device {
 
     /**
      * 设置设备高度
-     * @param height
+     * @param height 设备高度
      */
     public void setHeight(float height) {
         this.height = height;
@@ -95,7 +95,7 @@ public class Device {
 
     /**
      * 获取设备材质
-     * @return
+     * @return 材质
      */
     public String getMaterial() {
         return material;
@@ -103,7 +103,7 @@ public class Device {
 
     /**
      * 设置设备材质
-     * @param material
+     * @param material 设备材质
      */
     public void setMaterial(String material) {
         this.material = material;
@@ -111,7 +111,7 @@ public class Device {
 
     /**
      * 获取所属线路
-     * @return
+     * @return 所属线路
      */
     public String getsLine() {
         return sLine;
@@ -119,7 +119,7 @@ public class Device {
 
     /**
      * 设置所属线路
-     * @param sLine
+     * @param sLine 所属线路
      */
     public void setsLine(String sLine) {
         this.sLine = sLine;
@@ -127,7 +127,7 @@ public class Device {
 
     /**
      * 获取图片信息
-     * @return
+     * @return 图片信息
      */
     public String getPicture() {
         return picture;
@@ -135,7 +135,7 @@ public class Device {
 
     /**
      * 设置图片信息
-     * @param picture
+     * @param picture 图片信息
      */
     public void setPicture(String picture) {
         this.picture = picture;

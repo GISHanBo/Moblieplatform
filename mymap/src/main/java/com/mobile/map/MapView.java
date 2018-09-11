@@ -546,6 +546,18 @@ public class MapView extends WebView {
         loadMethod("removeLine(" + id + ")");
     }
 
+    /**
+     * 开始导出线路信息
+     */
+    public void exportLine(){
+        loadMethod("exportLine()");
+    }
+    /**
+     * 开始导出设备信息
+     */
+    public void exportDevice(){
+       loadMethod("exportDevice()");
+    }
 
     class JsInteration {
         /**
@@ -631,7 +643,6 @@ public class MapView extends WebView {
 
         @JavascriptInterface
         public void onLineClick(String json) {
-            Log.e(TAG,json);
             if (drawClickListener != null) {
                 Line line = new Line();
                 try {
@@ -654,6 +665,20 @@ public class MapView extends WebView {
                     e.printStackTrace();
                 }
                 drawClickListener.lineClick(line);
+            }
+        }
+
+        @JavascriptInterface
+        public void exportLine(String json){
+            if (drawClickListener!=null){
+                drawClickListener.exportLine(json);
+            }
+        }
+
+        @JavascriptInterface
+        public void exportDevice(String json){
+            if (drawClickListener!=null){
+                drawClickListener.exportDevice(json);
             }
         }
     }

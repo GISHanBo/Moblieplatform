@@ -111,5 +111,17 @@
             android:text="绘制线"
             android:layout_marginTop="5dp"
             android:onClick="startDrawLine"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="导出设备信息"
+            android:layout_marginTop="5dp"
+            android:onClick="exportDevice"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="导出线路信息"
+            android:layout_marginTop="5dp"
+            android:onClick="exportLine"/>
     </LinearLayout>
 </RelativeLayout>

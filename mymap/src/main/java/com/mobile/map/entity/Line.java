@@ -32,7 +32,7 @@ public class Line {
 
     /**
      * 获取类别简称
-     * @return
+     * @return 类别简称
      */
     public String getAbbreviation() {
         return abbreviation;
@@ -40,7 +40,7 @@ public class Line {
 
     /**
      * 设置类别简称
-     * @param abbreviation
+     * @param abbreviation 类别简称
      */
     public void setAbbreviation(String abbreviation) {
         this.abbreviation = abbreviation;
@@ -48,7 +48,7 @@ public class Line {
 
     /**
      * 获取电压等级
-     * @return
+     * @return 电压等级
      */
     public String getLevel() {
         return level;
@@ -56,7 +56,7 @@ public class Line {
 
     /**
      * 设置电压等级
-     * @param level
+     * @param level 电压等级
      */
     public void setLevel(String level) {
         this.level = level;
@@ -64,7 +64,7 @@ public class Line {
 
     /**
      * 获取导线型号
-     * @return
+     * @return 导线型号
      */
     public String getModel() {
         return model;
@@ -72,7 +72,7 @@ public class Line {
 
     /**
      * 设置导线型号
-     * @param model
+     * @param model 导线型号
      */
     public void setModel(String model) {
         this.model = model;
@@ -80,7 +80,7 @@ public class Line {
 
     /**
      * 获取导线分类
-     * @return
+     * @return 分类信息
      */
     public String getSort() {
         return sort;
@@ -88,7 +88,7 @@ public class Line {
 
     /**
      * 设置导线分类
-     * @param sort
+     * @param sort 分类信息
      */
     public void setSort(String sort) {
         this.sort = sort;
@@ -120,7 +120,7 @@ public class Line {
 
     /**
      * 设置线路地图ID
-     * @param id
+     * @param id 线路id
      */
     public void setId(long id) {
         this.id = id;

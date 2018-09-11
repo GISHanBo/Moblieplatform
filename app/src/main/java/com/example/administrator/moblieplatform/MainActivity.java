@@ -143,9 +143,16 @@ public class MainActivity extends AppCompatActivity {
         mapView.clearDraw();
     }
 
-
     public void startDrawLine(View view) {
         mapView.startDrawLine();
+    }
+
+    public void exportDevice(View view) {
+        mapView.exportDevice();
+    }
+
+    public void exportLine(View view) {
+        mapView.exportLine();
     }
 
     class mMapListener implements MapListener {
@@ -250,8 +257,21 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("opacity", line.getLineStyle().getOpacity());
             startActivityForResult(intent, 2);
         }
-    }
 
+        @Override
+        public void exportDevice(String json) {
+            Log.e(TAG, "导出设备信息");
+            Log.e(TAG, json);
+        }
+
+        @Override
+        public void exportLine(String json) {
+            Log.e(TAG, "导出线路信息");
+            Log.e(TAG, json);
+        }
+
+
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -281,15 +301,15 @@ public class MainActivity extends AppCompatActivity {
                 line.setType(data.getStringExtra("type"));
                 line.setName(data.getStringExtra("name"));
                 line.setAbbreviation(data.getStringExtra("abbreviation"));
-                line.setLength(data.getFloatExtra("length",0f));
+                line.setLength(data.getFloatExtra("length", 0f));
                 line.setLevel(data.getStringExtra("level"));
                 line.setModel(data.getStringExtra("model"));
                 line.setSort(data.getStringExtra("sort"));
-                LineStyle lineStyle=new LineStyle();
-                lineStyle.setShowLabel(data.getBooleanExtra("showLabel",false));
+                LineStyle lineStyle = new LineStyle();
+                lineStyle.setShowLabel(data.getBooleanExtra("showLabel", false));
                 lineStyle.setWidth(data.getByteExtra("width", (byte) 3));
                 lineStyle.setColor(data.getStringExtra("color"));
-                lineStyle.setOpacity(data.getFloatExtra("opacity",0f));
+                lineStyle.setOpacity(data.getFloatExtra("opacity", 0f));
                 line.setLineStyle(lineStyle);
                 mapView.updateLine(line);
                 break;
